@@ -305,8 +305,8 @@ module Launchpad
         }
         data[:type] = CODE_NOTE_TO_DATA_TYPE[[code, note]] || :grid
         if data[:type] == :grid
-          data[:x] = note % 16
-          data[:y] = note / 16
+          data[:x] = (note % 10) - 1
+          data[:y] = (note / 10) - 1
         end
         data
       end
@@ -441,7 +441,8 @@ module Launchpad
           logger.error "wrong coordinates specified: x=#{x}, y=#{y}"
           raise NoValidGridCoordinatesError.new("you need to specify valid coordinates (x/y, 0-7, from top left), you specified: x=#{x}, y=#{y}")
         end
-        note = y * 10 + x
+        note = (y + 1) * 10 + (x + 1)
+        # p x + ", " + y + ", " + note
       end
       note
     end

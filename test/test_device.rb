@@ -13,14 +13,14 @@ describe Launchpad::Device do
     :mixer    => 0x6F
   }
   SCENE_BUTTONS = {
-    :scene1   => 0x08,
-    :scene2   => 0x18,
-    :scene3   => 0x28,
-    :scene4   => 0x38,
-    :scene5   => 0x48,
-    :scene6   => 0x58,
-    :scene7   => 0x68,
-    :scene8   => 0x78
+    :scene1   => 0x59,
+    :scene2   => 0x4F,
+    :scene3   => 0x45,
+    :scene4   => 0x3B,
+    :scene5   => 0x31,
+    :scene6   => 0x27,
+    :scene7   => 0x1D,
+    :scene8   => 0x13
   }
   COLORS = {
     nil => 0, 0 => 0, :off => 0,
@@ -283,8 +283,8 @@ describe Launchpad::Device do
       describe 'grid buttons' do
         8.times do |x|
           8.times do |y|
-            it "sends 0x90, #{10 * y + x}, 12 when given :grid, :x => #{x}, :y => #{y}" do
-              expects_output(@device, 0x90, 10 * y + x, 12)
+            it "sends 0x90, #{10 * (y + 1) + (x + 1)}, 12 when given :grid, :x => #{x}, :y => #{y}" do
+              expects_output(@device, 0x90, 10 * (y + 1) + (x + 1), 12)
               @device.change(:grid, :x => x, :y => y)
             end
           end
@@ -332,7 +332,7 @@ describe Launchpad::Device do
         COLORS.each do |red_key, red_value|
           COLORS.each do |green_key, green_value|
             it "sends 0x90, 0, #{16 * green_value + red_value + 12} when given :red => #{red_key}, :green => #{green_key}" do
-              expects_output(@device, 0x90, 0, 16 * green_value + red_value + 12)
+              expects_output(@device, 0x90, 11, 16 * green_value + red_value + 12)
               @device.change(:grid, :x => 0, :y => 0, :red => red_key, :green => green_key)
             end
           end
@@ -379,22 +379,22 @@ describe Launchpad::Device do
       describe 'mode' do
         
         it 'sends color + 12 when nothing given' do
-          expects_output(@device, 0x90, 0, 12)
+          expects_output(@device, 0x90, 11, 12)
           @device.change(:grid, :x => 0, :y => 0, :red => 0, :green => 0)
         end
         
         it 'sends color + 12 when given :normal' do
-          expects_output(@device, 0x90, 0, 12)
+          expects_output(@device, 0x90, 11, 12)
           @device.change(:grid, :x => 0, :y => 0, :red => 0, :green => 0, :mode => :normal)
         end
         
         it 'sends color + 8 when given :flashing' do
-          expects_output(@device, 0x90, 0, 8)
+          expects_output(@device, 0x90, 11, 8)
           @device.change(:grid, :x => 0, :y => 0, :red => 0, :green => 0, :mode => :flashing)
         end
         
         it 'sends color when given :buffering' do
-          expects_output(@device, 0x90, 0, 0)
+          expects_output(@device, 0x90, 11, 0)
           @device.change(:grid, :x => 0, :y => 0, :red => 0, :green => 0, :mode => :buffering)
         end
         
@@ -510,7 +510,7 @@ describe Launchpad::Device do
           8.times do |y|
             STATES.each do |state, velocity|
               it "builds proper action for grid button #{x},#{y}, #{state}" do
-                stub_input(@device, {:timestamp => 0, :message => [0x90, 16 * y + x, velocity]})
+                stub_input(@device, {:timestamp => 0, :message => [0x90, 10 * (y + 1) + (x + 1), velocity]})
                 assert_equal [{:timestamp => 0, :state => state, :type => :grid, :x => x, :y => y}], @device.read_pending_actions
               end
             end
@@ -519,7 +519,7 @@ describe Launchpad::Device do
       end
       
       it 'builds proper actions for multiple pending actions' do
-        stub_input(@device, {:timestamp => 1, :message => [0x90, 0, 127]}, {:timestamp => 2, :message => [0xB0, 0x68, 0]})
+        stub_input(@device, {:timestamp => 1, :message => [0x90, 11, 127]}, {:timestamp => 2, :message => [0xB0, 0x68, 0]})
         assert_equal [{:timestamp => 1, :state => :down, :type => :grid, :x => 0, :y => 0}, {:timestamp => 2, :state => :up, :type => :up}], @device.read_pending_actions
       end
       
