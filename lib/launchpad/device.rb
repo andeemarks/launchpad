@@ -26,7 +26,7 @@ module Launchpad
     include MidiCodes
 
     MK2_DEVICE_NAME = 'Launchpad MK2 MIDI 1'
-        
+
     CODE_NOTE_TO_DATA_TYPE = {
       [Status::ON, SceneButton::SCENE1]     => :scene1,
       [Status::ON, SceneButton::SCENE2]     => :scene2,
@@ -441,7 +441,7 @@ module Launchpad
           logger.error "wrong coordinates specified: x=#{x}, y=#{y}"
           raise NoValidGridCoordinatesError.new("you need to specify valid coordinates (x/y, 0-7, from top left), you specified: x=#{x}, y=#{y}")
         end
-        note = y * 16 + x
+        note = y * 10 + x
       end
       note
     end

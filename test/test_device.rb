@@ -283,8 +283,8 @@ describe Launchpad::Device do
       describe 'grid buttons' do
         8.times do |x|
           8.times do |y|
-            it "sends 0x90, #{16 * y + x}, 12 when given :grid, :x => #{x}, :y => #{y}" do
-              expects_output(@device, 0x90, 16 * y + x, 12)
+            it "sends 0x90, #{10 * y + x}, 12 when given :grid, :x => #{x}, :y => #{y}" do
+              expects_output(@device, 0x90, 10 * y + x, 12)
               @device.change(:grid, :x => x, :y => y)
             end
           end
