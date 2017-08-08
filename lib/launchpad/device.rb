@@ -24,7 +24,9 @@ module Launchpad
     
     include Logging
     include MidiCodes
-    
+
+    MK2_DEVICE_NAME = 'Launchpad MK2 MIDI 1'
+        
     CODE_NOTE_TO_DATA_TYPE = {
       [Status::ON, SceneButton::SCENE1]     => :scene1,
       [Status::ON, SceneButton::SCENE2]     => :scene2,
@@ -338,7 +340,7 @@ module Launchpad
       logger.debug "creating #{device_type} with #{opts.inspect}, choosing from portmidi devices #{devices.inspect}"
       id = opts[:id]
       if id.nil?
-        name = opts[:name] || 'Launchpad'
+        name = opts[:name] || MK2_DEVICE_NAME
         device = devices.select {|device| device.name == name}.first
         id = device.device_id unless device.nil?
       end
