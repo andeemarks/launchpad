@@ -234,8 +234,7 @@ module Launchpad
     end
     
     def scroll(color_key, text, mode)
-      output_sysex([240, 0, 32, 41, 2, 24, 20, color_key,  mode,  5, 72, 101, 108, 108, 111, 32, 2, 119, 111, 114, 108,
-100, 33, 247])
+      output_sysex([240, 0, 32, 41, 2, 24, 20, color_key, mode].concat(text.chars.map(&:ord)).concat([247]))
     end
     
     def scroll_forever(color_key, text)

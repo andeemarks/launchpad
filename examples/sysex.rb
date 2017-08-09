@@ -20,7 +20,7 @@ device.flash(4, 4, 63)
 sleep 2
 device.pulse(3, 3, 63)
 sleep 2
-device.scroll_once(45, "hello")
+device.scroll_once(45, "Oscar is a snot monster")
 sleep 5
 device.scroll_stop()
 
