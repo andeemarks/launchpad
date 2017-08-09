@@ -467,13 +467,11 @@ module Launchpad
     # [Launchpad::NoValidBrightnessError] when brightness values aren't within the valid range
     def velocity(opts)
       if opts.is_a?(Hash)
-        red = brightness(opts[:red] || 0)
-        green = brightness(opts[:green] || 0)
-        color = 16 * green + red
+        color = color(opts[:color]) || 0
         flags = case opts[:mode]
                 when :flashing  then  8
                 when :buffering then  0
-                else                  12
+                else                  0
                 end
         color + flags
       else
@@ -481,6 +479,24 @@ module Launchpad
       end
     end
     
+    def color(color_key)
+      if color_key.nil?
+        0
+      else
+        if (not (color_key.is_a? Integer))
+          logger.error "wrong color specified: color_key=#{color_key}"
+          raise NoValidBrightnessError.new("you need to specify a valid color (0-127), you specified: color_key=#{color_key}")
+        end
+
+        if color_key < 0 || color_key > 127
+          logger.error "wrong color specified: color_key=#{color_key}"
+          raise NoValidBrightnessError.new("you need to specify a valid color (0-127), you specified: color_key=#{color_key}")
+        end
+
+        color_key
+      end
+    end
+
     # Calculates the integer brightness for given brightness values.
     # 
     # Parameters (see Launchpad for values):

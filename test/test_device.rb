@@ -264,8 +264,8 @@ describe Launchpad::Device do
       
       describe 'control buttons' do
         CONTROL_BUTTONS.each do |type, value|
-          it "sends 0xB0, #{value}, 12 when given #{type}" do
-            expects_output(@device, 0xB0, value, 12)
+          it "sends 0xB0, #{value}, 0 when given #{type}" do
+            expects_output(@device, 0xB0, value, 0)
             @device.change(type)
           end
         end
@@ -273,8 +273,8 @@ describe Launchpad::Device do
       
       describe 'scene buttons' do
         SCENE_BUTTONS.each do |type, value|
-          it "sends 0x90, #{value}, 12 when given #{type}" do
-            expects_output(@device, 0x90, value, 12)
+          it "sends 0x90, #{value}, 0 when given #{type}" do
+            expects_output(@device, 0x90, value, 0)
             @device.change(type)
           end
         end
@@ -283,8 +283,8 @@ describe Launchpad::Device do
       describe 'grid buttons' do
         8.times do |x|
           8.times do |y|
-            it "sends 0x90, #{10 * (y + 1) + (x + 1)}, 12 when given :grid, :x => #{x}, :y => #{y}" do
-              expects_output(@device, 0x90, 10 * (y + 1) + (x + 1), 12)
+            it "sends 0x90, #{10 * (y + 1) + (x + 1)}, 0 when given :grid, :x => #{x}, :y => #{y}" do
+              expects_output(@device, 0x90, (10 * (y + 1)) + (x + 1), 0)
               @device.change(:grid, :x => x, :y => y)
             end
           end
@@ -329,48 +329,28 @@ describe Launchpad::Device do
       end
       
       describe 'colors' do
-        COLORS.each do |red_key, red_value|
-          COLORS.each do |green_key, green_value|
-            it "sends 0x90, 0, #{16 * green_value + red_value + 12} when given :red => #{red_key}, :green => #{green_key}" do
-              expects_output(@device, 0x90, 11, 16 * green_value + red_value + 12)
-              @device.change(:grid, :x => 0, :y => 0, :red => red_key, :green => green_key)
-            end
+        (0..127).each do |color_key|
+          it "sends 0x90, 0, #{color_key} when given :color => #{color_key}" do
+            expects_output(@device, 0x90, 11, color_key)
+            @device.change(:grid, :x => 0, :y => 0, :color => color_key)
           end
         end
         
-        it 'raises NoValidBrightnessError if red is below 0' do
+        it 'raises NoValidBrightnessError if color is below 0' do
           assert_raises Launchpad::NoValidBrightnessError do
-            @device.change(:grid, :x => 0, :y => 0, :red => -1)
+            @device.change(:grid, :x => 0, :y => 0, :color => -1)
           end
         end
         
-        it 'raises NoValidBrightnessError if red is above 3' do
+        it 'raises NoValidBrightnessError if color is above 127' do
           assert_raises Launchpad::NoValidBrightnessError do
-            @device.change(:grid, :x => 0, :y => 0, :red => 4)
+            @device.change(:grid, :x => 0, :y => 0, :color => 128)
           end
         end
         
-        it 'raises NoValidBrightnessError if red is an unknown symbol' do
+        it 'raises NoValidBrightnessError if color is an unknown symbol' do
           assert_raises Launchpad::NoValidBrightnessError do
-            @device.change(:grid, :x => 0, :y => 0, :red => :unknown)
-          end
-        end
-        
-        it 'raises NoValidBrightnessError if green is below 0' do
-          assert_raises Launchpad::NoValidBrightnessError do
-            @device.change(:grid, :x => 0, :y => 0, :green => -1)
-          end
-        end
-        
-        it 'raises NoValidBrightnessError if green is above 3' do
-          assert_raises Launchpad::NoValidBrightnessError do
-            @device.change(:grid, :x => 0, :y => 0, :green => 4)
-          end
-        end
-        
-        it 'raises NoValidBrightnessError if green is an unknown symbol' do
-          assert_raises Launchpad::NoValidBrightnessError do
-            @device.change(:grid, :x => 0, :y => 0, :green => :unknown)
+            @device.change(:grid, :x => 0, :y => 0, :color => :unknown)
           end
         end
         
@@ -378,24 +358,24 @@ describe Launchpad::Device do
       
       describe 'mode' do
         
-        it 'sends color + 12 when nothing given' do
-          expects_output(@device, 0x90, 11, 12)
-          @device.change(:grid, :x => 0, :y => 0, :red => 0, :green => 0)
-        end
-        
-        it 'sends color + 12 when given :normal' do
-          expects_output(@device, 0x90, 11, 12)
-          @device.change(:grid, :x => 0, :y => 0, :red => 0, :green => 0, :mode => :normal)
-        end
-        
-        it 'sends color + 8 when given :flashing' do
-          expects_output(@device, 0x90, 11, 8)
-          @device.change(:grid, :x => 0, :y => 0, :red => 0, :green => 0, :mode => :flashing)
-        end
-        
-        it 'sends color when given :buffering' do
+        it 'sends 0 when nothing given' do
           expects_output(@device, 0x90, 11, 0)
-          @device.change(:grid, :x => 0, :y => 0, :red => 0, :green => 0, :mode => :buffering)
+          @device.change(:grid, :x => 0, :y => 0)
+        end
+        
+        it 'sends 0 when given :normal' do
+          expects_output(@device, 0x90, 11, 0)
+          @device.change(:grid, :x => 0, :y => 0, :mode => :normal)
+        end
+        
+        it 'sends 8 when given :flashing' do
+          expects_output(@device, 0x90, 11, 8)
+          @device.change(:grid, :x => 0, :y => 0, :mode => :flashing)
+        end
+        
+        it 'sends 0 when given :buffering' do
+          expects_output(@device, 0x90, 11, 0)
+          @device.change(:grid, :x => 0, :y => 0, :mode => :buffering)
         end
         
       end

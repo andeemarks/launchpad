@@ -8,6 +8,7 @@ module Launchpad
       NIL           = 0x00
       OFF           = 0x80
       ON            = 0x90
+      MULTI         = 0x92
       CC            = 0xB0
     end
     
