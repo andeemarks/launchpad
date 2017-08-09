@@ -21,7 +21,7 @@ sleep 2
 device.pulse(3, 3, 63)
 sleep 2
 device.scroll_once(45, "Oscar is a snot monster")
-sleep 5
+sleep 10
 device.scroll_stop()
 
 # sleep so that the messages can be sent before the program terminates
