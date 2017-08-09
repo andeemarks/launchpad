@@ -2,8 +2,8 @@ require 'launchpad'
 
 device = Launchpad::Device.new
 
-on = { :red => :high, :green => :off }
-off = { :red => :off, :green => :lo }
+on = { :color => 56 }
+off = { :color => 72 }
 
 digit_map = [
   [off, off, off, off],
@@ -21,7 +21,7 @@ digit_map = [
 while true do
   Time.now.strftime('%H%M%S').split('').each_with_index do |digit, x|
     digit_map[digit.to_i].each_with_index do |color, y|
-      device.change :grid, color.merge(:x => x, :y => (7 - y))
+      device.change :grid, color.merge(:x => x, :y => y)
     end
   end
 
