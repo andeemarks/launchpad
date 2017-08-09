@@ -227,6 +227,51 @@ module Launchpad
       output_messages(messages)
     end
     
+    def flash(x, y, color_key)
+      note = note(:grid, {:x => x, :y => y})
+      p note
+      output_sysex([240, 0, 32, 41, 2, 24, 35, note, color_key, 247])
+    end
+    
+    def scroll(color_key, text, mode)
+      output_sysex([240, 0, 32, 41, 2, 24, 20, color_key,  mode,  5, 72, 101, 108, 108, 111, 32, 2, 119, 111, 114, 108,
+100, 33, 247])
+    end
+    
+    def scroll_forever(color_key, text)
+      scroll(color_key, text, 1)
+    end
+    
+    def scroll_once(color_key, text)
+      scroll(color_key, text, 0)
+    end
+    
+    def scroll_stop()
+      output_sysex([240, 0, 32, 41, 2, 24, 20, 247])
+    end
+
+    def pulse(x, y, color_key)
+      note = note(:grid, {:x => x, :y => y})
+      p note
+      output_sysex([240, 0, 32, 41, 2, 24, 40, note, color_key, 247])
+    end
+
+    def light_all(color_key)
+      output_sysex([240, 0, 32, 41, 2, 24, 14, color_key, 247])
+    end
+    
+    def reset()
+      output_sysex([240, 0, 32, 41, 2, 24, 14, 0, 247])
+    end
+    
+    def light_column(column_key, color_key)
+      output_sysex([240, 0, 32, 41, 2, 24, 12, column_key, color_key, 247])
+    end
+    
+    def light_row(row_key, color_key)
+      output_sysex([240, 0, 32, 41, 2, 24, 13, row_key, color_key, 247])
+    end
+
     # Switches LEDs marked as flashing on when using custom timer for flashing.
     # 
     # Errors raised:
@@ -411,6 +456,16 @@ module Launchpad
       end
       logger.debug "writing messages to launchpad:\n  #{messages.join("\n  ")}" if logger.debug?
       @output.write(messages)
+      nil
+    end
+
+    def output_sysex(messages)
+      if @output.nil?
+        logger.error "trying to write to device that's not been initialized for output"
+        raise NoOutputAllowedError
+      end
+      logger.debug "writing sysex to launchpad:\n  #{messages.join("\n  ")}" if logger.debug?
+      @output.write_sysex(messages)
       nil
     end
     
