@@ -2,7 +2,7 @@ require 'launchpad'
 
 device = Launchpad::Device.new
 
-on = { :color => 56 }
+on = { :color => 16 }
 off = { :color => 72 }
 
 digit_map = [
@@ -18,10 +18,22 @@ digit_map = [
   [on , off, off, on ]
 ]
 
+def offset_x(x)
+  if (x == 0 or x == 1)
+    return x
+  end
+
+  if (x == 2 or x == 3)
+    return (x + 1)
+  end
+
+  return (x + 2)
+end
+
 while true do
   Time.now.strftime('%H%M%S').split('').each_with_index do |digit, x|
     digit_map[digit.to_i].each_with_index do |color, y|
-      device.change :grid, color.merge(:x => x, :y => y)
+      device.change :grid, color.merge(:x => offset_x(x), :y => (y + 2))
     end
   end
 
