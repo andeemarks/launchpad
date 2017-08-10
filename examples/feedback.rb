@@ -2,24 +2,19 @@ require 'launchpad'
 
 interaction = Launchpad::Interaction.new
 
-def brightness(action)
-  action[:state] == :down ? :hi : :off
-end
-
 # yellow feedback for grid buttons
 interaction.response_to(:grid) do |interaction, action|
-  b = brightness(action)
-  interaction.device.change(:grid, action.merge(:red => b, :green => b))
+  	interaction.device.change(:grid, :x => action[:x], :y => action[:y], :color => 13)
 end
 
 # red feedback for top control buttons
 interaction.response_to([:up, :down, :left, :right, :session, :user1, :user2, :mixer]) do |interaction, action|
-  interaction.device.change(action[:type], :red => brightness(action))
+  interaction.device.change(action[:type], :color => 72)
 end
 
 # green feedback for scene buttons
 interaction.response_to([:scene1, :scene2, :scene3, :scene4, :scene5, :scene6, :scene7, :scene8]) do |interaction, action|
-  interaction.device.change(action[:type], :green => brightness(action))
+  interaction.device.change(action[:type], :color => 16)
 end
 
 # mixer button terminates interaction on button up
