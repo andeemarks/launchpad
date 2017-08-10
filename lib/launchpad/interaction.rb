@@ -49,12 +49,13 @@ module Launchpad
     # [Launchpad::NoSuchDeviceError] when device with ID or name specified does not exist
     # [Launchpad::DeviceBusyError] when device with ID or name specified is busy
     def initialize(opts = nil)
+      @reader_thread = nil
       opts ||= {}
 
       self.logger = opts[:logger]
       logger.debug "initializing Launchpad::Interaction##{object_id} with #{opts.inspect}"
 
-      @device = opts[:device]
+      @device ||= opts[:device]
       @device ||= Device.new(opts.merge(
         :input => true,
         :output => true,

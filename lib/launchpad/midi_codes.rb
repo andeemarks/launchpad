@@ -36,11 +36,6 @@ module Launchpad
       SCENE8        = 0x13
     end
     
-    # Module defining MIDI data 2 (velocity) codes.
-    module Velocity
-      TEST_LEDS     = 0x7C
-    end
-    
     # Module defining MIDI data 2 codes for selecting the grid layout.
     module GridLayout
       XY            = 0x01

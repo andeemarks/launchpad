@@ -141,7 +141,7 @@ describe Launchpad::Device do
       
       before do
         Portmidi::Input.stubs(:new).returns(@input = mock('input'))
-        Portmidi::Output.stubs(:new).returns(@output = mock('output', :write => nil))
+        Portmidi::Output.stubs(:new).returns(@output = mock('output', :write => nil, :write_sysex => nil))
         @device = Launchpad::Device.new
       end
       
@@ -185,10 +185,7 @@ describe Launchpad::Device do
   end
   
   {
-    :reset          => [0xB0, 0x00, 0x00],
-    :flashing_on    => [0xB0, 0x00, 0x20],
-    :flashing_off   => [0xB0, 0x00, 0x21],
-    :flashing_auto  => [0xB0, 0x00, 0x28]
+    :reset          => [0xB0, 0x00, 0x00]
   }.each do |method, codes|
     describe "##{method}" do
     
@@ -205,43 +202,6 @@ describe Launchpad::Device do
       end
     
     end
-  end
-  
-  describe '#test_leds' do
-    
-    it 'raises NoOutputAllowedError when not initialized with output' do
-      assert_raises Launchpad::NoOutputAllowedError do
-        Launchpad::Device.new(:output => false).test_leds
-      end
-    end
-    
-    describe 'initialized with output' do
-      
-      before do
-        @device = Launchpad::Device.new(:input => false)
-      end
-      
-      it 'returns nil' do
-        assert_nil @device.test_leds
-      end
-      
-      COLORS.merge(nil => 3).each do |name, value|
-        if value == 0
-          it "sends 0xB0, 0x00, 0x00 when given #{name}" do
-            expects_output(@device, 0xB0, 0x00, 0x00)
-            @device.test_leds(value)
-          end
-        else
-          it "sends 0xB0, 0x00, 0x7C + #{value} when given #{name}" do
-            d = Launchpad::Device.new
-            expects_output(@device, 0xB0, 0x00, 0x7C + value)
-            value.nil? ? @device.test_leds : @device.test_leds(value)
-          end
-        end
-      end
-      
-    end
-    
   end
   
   describe '#change' do
@@ -378,40 +338,6 @@ describe Launchpad::Device do
           @device.change(:grid, :x => 0, :y => 0, :mode => :buffering)
         end
         
-      end
-      
-    end
-    
-  end
-  
-  describe '#change_all' do
-    
-    it 'raises NoOutputAllowedError when not initialized with output' do
-      assert_raises Launchpad::NoOutputAllowedError do
-        Launchpad::Device.new(:output => false).change_all
-      end
-    end
-    
-    describe 'initialized with output' do
-      
-      before do
-        @device = Launchpad::Device.new(:input => false)
-      end
-      
-      it 'returns nil' do
-        assert_nil @device.change_all([0])
-      end
-      
-      it 'fills colors with 0, set grid layout to XY and flush colors' do
-        expects_output(@device, 0xB0, 0, 0x01)
-        expects_output(@device, *([[0x92, 17, 17]] * 20 + [[0x92, 12, 12]] * 20))
-        @device.change_all([5] * 40)
-      end
-      
-      it 'cuts off exceeding colors, set grid layout to XY and flush colors' do
-        expects_output(@device, 0xB0, 0, 0x01)
-        expects_output(@device, *([[0x92, 17, 17]] * 40))
-        @device.change_all([5] * 100)
       end
       
     end

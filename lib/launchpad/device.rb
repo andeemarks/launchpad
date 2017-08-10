@@ -87,6 +87,8 @@ module Launchpad
     # [Launchpad::NoSuchDeviceError] when device with ID or name specified does not exist
     # [Launchpad::DeviceBusyError] when device with ID or name specified is busy
     def initialize(opts = nil)
+      @input = nil
+      @output = nil
       opts = {
         :input        => true,
         :output       => true
@@ -142,24 +144,6 @@ module Launchpad
       output(Status::CC, Status::NIL, Status::NIL)
     end
     
-    # Lights all LEDs (for testing purposes).
-    # 
-    # Parameters (see Launchpad for values):
-    # 
-    # [+brightness+] brightness of both LEDs for all buttons
-    # 
-    # Errors raised:
-    # 
-    # [Launchpad::NoOutputAllowedError] when output is not enabled
-    def test_leds(brightness = :high)
-      brightness = brightness(brightness)
-      if brightness == 0
-        reset
-      else
-        output(Status::CC, Status::NIL, Velocity::TEST_LEDS + brightness)
-      end
-    end
-    
     # Changes a single LED.
     # 
     # Parameters (see Launchpad for values):
@@ -186,45 +170,6 @@ module Launchpad
       opts ||= {}
       status = %w(up down left right session user1 user2 mixer).include?(type.to_s) ? Status::CC : Status::ON
       output(status, note(type, opts), velocity(opts))
-    end
-    
-    # Changes all LEDs in batch mode.
-    # 
-    # Parameters (see Launchpad for values):
-    # 
-    # [+colors] an array of colors, each either being an integer or a Hash
-    #           * integer: calculated using the formula
-    #             <tt>color = 16 * green + red</tt>
-    #           * Hash:
-    #             [<tt>:red</tt>]   brightness of red LED
-    #             [<tt>:green</tt>] brightness of green LED
-    #             [<tt>:mode</tt>]  button mode, defaults to <tt>:normal</tt>, one of:
-    #                               [<tt>:normal/tt>]     updates the LEDs for all circumstances (the new value will be written to both buffers)
-    #                               [<tt>:flashing/tt>]   updates the LEDs for flashing (the new values will be written to buffer 0 while the LEDs will be off in buffer 1, see buffering_mode)
-    #                               [<tt>:buffering/tt>]  updates the LEDs for the current update_buffer only
-    #           the array consists of 64 colors for the grid buttons,
-    #           8 colors for the scene buttons (top to bottom)
-    #           and 8 colors for the top control buttons (left to right),
-    #           maximum 80 values - excessive values will be ignored,
-    #           missing values will be filled with 0
-    # 
-    # Errors raised:
-    # 
-    # [Launchpad::NoValidBrightnessError] when brightness values aren't within the valid range
-    # [Launchpad::NoOutputAllowedError] when output is not enabled
-    def change_all(*colors)
-      # ensure that colors is at least and most 80 elements long
-      colors = colors.flatten[0..79]
-      colors += [0] * (80 - colors.size) if colors.size < 80
-      # send normal MIDI message to reset rapid LED change pointer
-      # in this case, set mapping mode to x-y layout (the default)
-      output(Status::CC, Status::NIL, GridLayout::XY)
-      # send colors in slices of 2
-      messages = []
-      colors.each_slice(2) do |c1, c2|
-        messages << message(Status::MULTI, velocity(c1), velocity(c2))
-      end
-      output_messages(messages)
     end
 
     SYSEX_HEADER = [240, 0, 32, 41, 2, 24]
@@ -270,34 +215,6 @@ module Launchpad
     
     def light_row(row_key, color_key)
       output_sysex(SYSEX_HEADER + [13, row_key, color_key] + SYSEX_FOOTER)
-    end
-
-    # Switches LEDs marked as flashing on when using custom timer for flashing.
-    # 
-    # Errors raised:
-    # 
-    # [Launchpad::NoOutputAllowedError] when output is not enabled
-    def flashing_on
-      buffering_mode(:display_buffer => 0)
-    end
-    
-    # Switches LEDs marked as flashing off when using custom timer for flashing.
-    # 
-    # Errors raised:
-    # 
-    # [Launchpad::NoOutputAllowedError] when output is not enabled
-    def flashing_off
-      buffering_mode(:display_buffer => 1)
-    end
-    
-    # Starts flashing LEDs marked as flashing automatically.
-    # Stop flashing by calling flashing_on or flashing_off.
-    # 
-    # Errors raised:
-    # 
-    # [Launchpad::NoOutputAllowedError] when output is not enabled
-    def flashing_auto
-      buffering_mode(:flashing => true)
     end
     
     # Controls the two buffers.
@@ -497,7 +414,6 @@ module Launchpad
           raise NoValidGridCoordinatesError.new("you need to specify valid coordinates (x/y, 0-7, from top left), you specified: x=#{x}, y=#{y}")
         end
         note = (y + 1) * 10 + (x + 1)
-        # p x + ", " + y + ", " + note
       end
       note
     end

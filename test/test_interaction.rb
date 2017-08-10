@@ -4,6 +4,17 @@ require 'timeout'
 class BreakError < StandardError; end
 
 describe Launchpad::Interaction do
+    
+  before do
+    @interaction = nil
+    @reader = nil
+    @grid_down = nil
+    @mixer_down = nil
+    @mixer_up = nil
+    @mixer = nil
+    @all_up = nil
+  end
+
 
   # returns true/false whether the operation ended or the timeout was hit
   def timeout(timeout = 0.02, &block)
