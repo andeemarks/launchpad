@@ -226,15 +226,22 @@ module Launchpad
       end
       output_messages(messages)
     end
+
+    SYSEX_HEADER = [240, 0, 32, 41, 2, 24]
+    SYSEX_FOOTER = [247]
+
+    def pulse(x, y, color_key)
+      note = note(:grid, {:x => x, :y => y})
+      output_sysex(SYSEX_HEADER + [40, 0, note, color_key] + SYSEX_FOOTER)
+    end
     
     def flash(x, y, color_key)
       note = note(:grid, {:x => x, :y => y})
-      p note
-      output_sysex([240, 0, 32, 41, 2, 24, 35, note, color_key, 247])
+      output_sysex(SYSEX_HEADER + [35, 0, note, color_key] + SYSEX_FOOTER)
     end
     
     def scroll(color_key, text, mode)
-      output_sysex([240, 0, 32, 41, 2, 24, 20, color_key, mode].concat(text.chars.map(&:ord)).concat([247]))
+      output_sysex(SYSEX_HEADER + [20, color_key, mode] + text.chars.map(&:ord) + SYSEX_FOOTER)
     end
     
     def scroll_forever(color_key, text)
@@ -246,29 +253,23 @@ module Launchpad
     end
     
     def scroll_stop()
-      output_sysex([240, 0, 32, 41, 2, 24, 20, 247])
-    end
-
-    def pulse(x, y, color_key)
-      note = note(:grid, {:x => x, :y => y})
-      p note
-      output_sysex([240, 0, 32, 41, 2, 24, 40, note, color_key, 247])
+      output_sysex(SYSEX_HEADER + [20] + SYSEX_FOOTER)
     end
 
     def light_all(color_key)
-      output_sysex([240, 0, 32, 41, 2, 24, 14, color_key, 247])
+      output_sysex(SYSEX_HEADER + [14, color_key] + SYSEX_FOOTER)
     end
     
     def reset()
-      output_sysex([240, 0, 32, 41, 2, 24, 14, 0, 247])
+      light_all(0)
     end
     
     def light_column(column_key, color_key)
-      output_sysex([240, 0, 32, 41, 2, 24, 12, column_key, color_key, 247])
+      output_sysex(SYSEX_HEADER + [12, column_key, color_key] + SYSEX_FOOTER)
     end
     
     def light_row(row_key, color_key)
-      output_sysex([240, 0, 32, 41, 2, 24, 13, row_key, color_key, 247])
+      output_sysex(SYSEX_HEADER + [13, row_key, color_key] + SYSEX_FOOTER)
     end
 
     # Switches LEDs marked as flashing on when using custom timer for flashing.

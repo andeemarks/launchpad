@@ -30,6 +30,7 @@ module Portmidi
       self.device_id = device_id
     end
     def write(*args); nil; end
+    def write_sysex(*args); nil; end
     def close; nil; end
   end
   
