@@ -63,14 +63,6 @@ This is an interaction example lighting all grid buttons in red when pressed and
 
 For more details, see the examples. examples/color_picker.rb is the most complex example with interaction.
 
-
-== Future plans
-
-* bitmap rendering
-* internal tracking of LED states for both buffers
-
-
-
 == Copyright
 
 Copyright (c) 2016 Andy Marks. See LICENSE for details.
