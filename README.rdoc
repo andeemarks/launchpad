@@ -70,41 +70,7 @@ For more details, see the examples. examples/color_picker.rb is the most complex
 * internal tracking of LED states for both buffers
 
 
-== Changelog
-
-=== v.0.3.0
-
-* logging
-* reworked multi threading for action handling
-* compatibility with ruby 1.8.7 and 2.0.0
-* interaction responses for presses on single grid buttons/button areas/columns/rows
-
-=== v.0.2.2
-
-* single threading fix: prevent ThreadError when Launchpad::Interaction#stop is called within an action response
-
-=== v.0.2.1
-
-* Launchpad::Interaction#close now properly stops interaction first
-* multi threading: Launchpad::Interaction#start method can be called with :detached => true to allow calling thread to continue
-
-=== v.0.2.0
-
-* double buffering (see Launchpad::Device#buffering_mode)
-* don't update grid button 0,0 before change_all (in order to reset rapid update pointer), use MIDI message without visual effect
-* (at least) doubled the speed of change_all by not sending each message individually but sending them in one go (as an array)
-
-=== v0.1.1
-
-* ability to close device/interaction to free portmidi resources
-* ability to initialize devices using device ids as well as device names
-* complete documentation for http://rdoc.info/projects/thomasjachmann/launchpad
-
-=== v0.1.0
-
-* first feature complete version with kinda stable API
-
 
 == Copyright
 
-Copyright (c) 2009 Thomas Jachmann. See LICENSE for details.
+Copyright (c) 2016 Andy Marks. See LICENSE for details.
