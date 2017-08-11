@@ -8,7 +8,7 @@ This gem started life as a clone of {Thomas Jachman's gem}[https://github.com/th
 
 == More Info
 
-* Novation's Launchpad MK2 MIDI programmer's reference at {https://global.novationmusic.com/sites/default/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide_0.pdf}[https://global.novationmusic.com/sites/default/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide_0.pdf]
+* Novation's Launchpad MK2 MIDI programmer's reference {here}[https://global.novationmusic.com/sites/default/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide_0.pdf]
 
 == Requirements
 
