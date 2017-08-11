@@ -457,8 +457,7 @@ describe Launchpad::Interaction do
           :state      => :down,
           :type       => :mixer
         }])
-      erg = timeout { i.start }
-      # assert erg, 'the actions weren\'t called'
+      timeout { i.start }
       assert_equal '', log.string
     end
     

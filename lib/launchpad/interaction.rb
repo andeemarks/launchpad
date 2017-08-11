@@ -50,6 +50,7 @@ module Launchpad
     # [Launchpad::DeviceBusyError] when device with ID or name specified is busy
     def initialize(opts = nil)
       @reader_thread = nil
+      @device = nil
       opts ||= {}
 
       self.logger = opts[:logger]
@@ -118,8 +119,8 @@ module Launchpad
       @reader_thread ||= Thread.new do
         begin
           while @active do
-            @device.read_pending_actions.each do |action|
-              action_thread = Thread.new(action) do |action|
+            @device.read_pending_actions.each do |pending_action|
+              action_thread = Thread.new(pending_action) do |action|
                 respond_to_action(action)
               end
               @action_threads.add(action_thread)
@@ -196,10 +197,10 @@ module Launchpad
       types = Array(types)
       opts ||= {}
       no_response_to(types, state) if opts[:exclusive] == true
-      Array(state == :both ? %w(down up) : state).each do |state|
+      Array(state == :both ? %w(down up) : state).each do |current_state|
         types.each do |type|
           combined_types(type, opts).each do |combined_type|
-            responses[combined_type][state.to_sym] << block
+            responses[combined_type][current_state.to_sym] << block
           end
         end
       end
@@ -226,10 +227,10 @@ module Launchpad
     def no_response_to(types = nil, state = :both, opts = nil)
       logger.debug "removing response to #{types.inspect} for state #{state.inspect}"
       types = Array(types)
-      Array(state == :both ? %w(down up) : state).each do |state|
+      Array(state == :both ? %w(down up) : state).each do |current_state|
         types.each do |type|
           combined_types(type, opts).each do |combined_type|
-            responses[combined_type][state.to_sym].clear
+            responses[combined_type][current_state.to_sym].clear
           end
         end
       end
