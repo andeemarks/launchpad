@@ -301,7 +301,7 @@ module Launchpad
         return [:grid] if x.nil? && y.nil?  # whole grid
         x ||= ['-']                         # whole row
         y ||= ['-']                         # whole column
-        x.product(y).map {|x, y| :"grid#{x}#{y}"}
+        x.product(y).map {|current_x, current_y| :"grid#{current_x}#{current_y}"}
       else
         [type.to_sym]
       end

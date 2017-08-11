@@ -329,7 +329,7 @@ module Launchpad
       id = opts[:id]
       if id.nil?
         name = opts[:name] || MK2_DEVICE_NAME
-        device = devices.select {|device| device.name == name}.first
+        device = devices.select {|current_device| current_device.name == name}.first
         id = device.device_id unless device.nil?
       end
       if id.nil?

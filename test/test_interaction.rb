@@ -449,7 +449,7 @@ describe Launchpad::Interaction do
       logger = Logger.new(log)
       logger.level = Logger::ERROR
       i = Launchpad::Interaction.new(:logger => logger)
-      i.response_to(:mixer, :down) {|i,a| i.stop}
+      i.response_to(:mixer, :down) {|current_interaction,a| current_interaction.stop}
       i.device.expects(:read_pending_actions).
         at_least_once.
         returns([{
