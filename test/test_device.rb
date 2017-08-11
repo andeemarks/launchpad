@@ -39,8 +39,8 @@ describe Launchpad::Device do
     device.instance_variable_get('@output').expects(:write).with(messages)
   end
 
-  def expects_sysex_output(device, message)
-    device.instance_variable_get('@output').expects(:write_sysex).with(message)
+  def expects_sysex_message(device, message)
+    device.instance_variable_get('@output').expects(:write_sysex).with(Launchpad::Device::SYSEX_HEADER + message  + Launchpad::Device::SYSEX_FOOTER)
   end
   
   def stub_input(device, *args)
@@ -207,11 +207,6 @@ describe Launchpad::Device do
     
     end
   end
-  
-  PULSE_MESSAGES = [
-    [1, 4, 24],
-    [0, 6, 27]
-  ]
 
   describe '#pulse1' do
     describe 'initialized with output' do
@@ -219,10 +214,26 @@ describe Launchpad::Device do
         @device = Launchpad::Device.new(:input => false)
       end
 
-      PULSE_MESSAGES.each do |message|
+      [[1, 4, 24], [0, 6, 27]].each do |message|
         it "sends 40, 0, #{(message[1] + 1) * 10 + (message[0] + 1)}, #{message[2]} when given #{message}" do
-          expects_sysex_output(@device, Launchpad::Device::SYSEX_HEADER + [40, 0, (message[1] + 1) * 10 + (message[0] + 1), message[2]] + Launchpad::Device::SYSEX_FOOTER)
+          expects_sysex_message(@device, [40, 0, (message[1] + 1) * 10 + (message[0] + 1), message[2]])
           @device.pulse1(message[0], message[1], message[2])
+        end
+      end
+
+    end
+  end
+
+  describe '#flash1' do
+    describe 'initialized with output' do
+      before do
+        @device = Launchpad::Device.new(:input => false)
+      end
+
+      [[1, 4, 24], [0, 6, 27]].each do |message|
+        it "sends 40, 0, #{(message[1] + 1) * 10 + (message[0] + 1)}, #{message[2]} when given #{message}" do
+          expects_sysex_message(@device, [35, 0, (message[1] + 1) * 10 + (message[0] + 1), message[2]])
+          @device.flash1(message[0], message[1], message[2])
         end
       end
 
