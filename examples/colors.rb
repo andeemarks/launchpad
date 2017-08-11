@@ -2,20 +2,26 @@ require 'launchpad'
 
 device = Launchpad::Device.new(:input => false, :output => true)
 
-pos_x = pos_y = 0
-4.times do |red|
-  4.times do |green|
-    device.change :grid, :x => pos_x, :y => pos_y, :red => red, :green => green
-    device.change :grid, :x => 7 - pos_x, :y => pos_y, :red => red, :green => green
-    device.change :grid, :x => pos_x, :y => 7 - pos_y, :red => red, :green => green
-    device.change :grid, :x => 7 - pos_x, :y => 7 - pos_y, :red => red, :green => green
-    pos_y += 1
-    # sleep, otherwise the connection drops some messages - WTF?
-    sleep 0.01
+color = 0
+# first page of colors
+(0..7).each do |row|
+  (0..7).each do |column|
+    device.change :grid, :x => column, :y => row, :color => color
+    color = color + 1
   end
-  pos_x += 1
-  pos_y = 0
+end
+
+sleep 2
+
+# second page of colors
+(0..7).each do |row|
+  (0..7).each do |column|
+    device.change :grid, :x => column, :y => row, :color => color
+    color = color + 1
+  end
 end
 
 # sleep so that the messages can be sent before the program terminates
-sleep 0.1
+sleep 2
+
+device.reset_all()
