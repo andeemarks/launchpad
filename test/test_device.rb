@@ -231,9 +231,41 @@ describe Launchpad::Device do
       end
 
       [[1, 4, 24], [0, 6, 27]].each do |message|
-        it "sends 40, 0, #{(message[1] + 1) * 10 + (message[0] + 1)}, #{message[2]} when given #{message}" do
+        it "sends 35, 0, #{(message[1] + 1) * 10 + (message[0] + 1)}, #{message[2]} when given #{message}" do
           expects_sysex_message(@device, [35, 0, (message[1] + 1) * 10 + (message[0] + 1), message[2]])
           @device.flash1(message[0], message[1], message[2])
+        end
+      end
+
+    end
+  end
+
+  describe '#light1_row' do
+    describe 'initialized with output' do
+      before do
+        @device = Launchpad::Device.new(:input => false)
+      end
+
+      [[1, 24], [0, 27]].each do |message|
+        it "sends 13, #{message[0]}, #{message[1]} when given #{message}" do
+          expects_sysex_message(@device, [13, message[0], message[1]])
+          @device.light1_row(message[0], message[1])
+        end
+      end
+
+    end
+  end
+
+  describe '#light1_column' do
+    describe 'initialized with output' do
+      before do
+        @device = Launchpad::Device.new(:input => false)
+      end
+
+      [[1, 24], [0, 27]].each do |message|
+        it "sends 12, #{message[0]}, #{message[1]} when given #{message}" do
+          expects_sysex_message(@device, [12, message[0], message[1]])
+          @device.light1_column(message[0], message[1])
         end
       end
 
