@@ -1,42 +1,25 @@
 = launchpad
 
-{<img src="https://travis-ci.org/thomasjachmann/launchpad.png?branch=master" alt="Build Status" />}[https://travis-ci.org/thomasjachmann/launchpad]
+{<img src="https://travis-ci.org/andeemarks/launchpad.png?branch=master" alt="Build Status" />}[https://travis-ci.org/andeemarks/launchpad]
 
-This gem provides a ruby interface to access novation's launchpad programmatically. LEDs can be lighted and button presses can be responded to. Internally, launchpad's MIDI input/output is used to accomplish this.
+This gem provides a Ruby interface to access the {Novation Launchpad MK2}[https://global.novationmusic.com/launch/launchpad#] programmatically.
 
-The interfaces should be rather stable now (sorry, I changed quite a bit since the last release), so experiment with them and comment on their usability. This still is work in progress. If you need anything or think the interfaces could be improved in any way, please contact me.
-
-Sometimes, the launchpad won't react to anything or react to/light up the wrong LEDs. Don't despair, just dis- and reconnect the thing. It seems that some (unexpected) MIDI signals make it hickup.
-
+This gem started life as a clone of {Thomas Jachman's gem}[https://github.com/thomasjachmann/launchpad] and was updated to handle the MK2 version of the Launchpad.
 
 == More Info
 
-If you don't know what launchpad is, visit:
-
-* Novation's site at http://de.novationmusic.com/products/midi_controller/launchpad
-* my demo videos for this library at http://www.youtube.com/thomasjachmann
-* other demos on youtube http://www.youtube.com/results?search_query=novation+launchpad
-
-If you're into other languages or want to know what goes on behind the scenes MIDI wise, have a look at:
-
-* Novation's MIDI programmer's reference at {www.novationmusic.com/support/launchpad}[http://www.novationmusic.com/support/launchpad/] (bottom of the page)
-* Tobi Tobes' port of my gem to processing at http://github.com/rngtng/launchpad
-
+* Novation's Launchpad MK2 MIDI programmer's reference at {https://global.novationmusic.com/sites/default/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide_0.pdf}[https://global.novationmusic.com/sites/default/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide_0.pdf]
 
 == Requirements
 
 * Roger B. Dannenberg's {portmidi library}[http://sourceforge.net/projects/portmedia/]
 * Jan Krutisch's {portmidi gem}[http://github.com/halfbyte/portmidi]
 
-
 == Compatibility
 
 The gem is known to be compatible with the following ruby versions:
 
-* MRI 1.8.7
-* MRI 1.9.3
-* MRI 2.0.0
-
+* MRI 2.3.1
 
 == Installation
 
