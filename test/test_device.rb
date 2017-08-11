@@ -38,6 +38,10 @@ describe Launchpad::Device do
     messages = args.collect {|data| {:message => data, :timestamp => 0}}
     device.instance_variable_get('@output').expects(:write).with(messages)
   end
+
+  def expects_sysex_output(device, message)
+    device.instance_variable_get('@output').expects(:write_sysex).with(message)
+  end
   
   def stub_input(device, *args)
     device.instance_variable_get('@input').stubs(:read).returns(args)
@@ -141,7 +145,7 @@ describe Launchpad::Device do
       
       before do
         Portmidi::Input.stubs(:new).returns(@input = mock('input'))
-        Portmidi::Output.stubs(:new).returns(@output = mock('output', :write => nil, :write_sysex => nil))
+        Portmidi::Output.stubs(:new).returns(@output = mock('output', :write => nil))
         @device = Launchpad::Device.new
       end
       
@@ -204,6 +208,27 @@ describe Launchpad::Device do
     end
   end
   
+  PULSE_MESSAGES = [
+    [1, 4, 24],
+    [0, 6, 27]
+  ]
+
+  describe '#pulse1' do
+    describe 'initialized with output' do
+      before do
+        @device = Launchpad::Device.new(:input => false)
+      end
+
+      PULSE_MESSAGES.each do |message|
+        it "sends 40, 0, #{(message[1] + 1) * 10 + (message[0] + 1)}, #{message[2]} when given #{message}" do
+          expects_sysex_output(@device, Launchpad::Device::SYSEX_HEADER + [40, 0, (message[1] + 1) * 10 + (message[0] + 1), message[2]] + Launchpad::Device::SYSEX_FOOTER)
+          @device.pulse1(message[0], message[1], message[2])
+        end
+      end
+
+    end
+  end
+
   describe '#change' do
     
     it 'raises NoOutputAllowedError when not initialized with output' do
