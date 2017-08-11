@@ -175,14 +175,28 @@ module Launchpad
     SYSEX_HEADER = [240, 0, 32, 41, 2, 24]
     SYSEX_FOOTER = [247]
 
-    def pulse(x, y, color_key)
+    def pulse1(x, y, color_key)
       note = note(:grid, {:x => x, :y => y})
       output_sysex(SYSEX_HEADER + [40, 0, note, color_key] + SYSEX_FOOTER)
     end
+
+    def pulsen(notes, color_key)
+      notes.each { |coord|
+        note = note(:grid, {:x => coord[0], :y => coord[1]})
+        output_sysex(SYSEX_HEADER + [40, 0, note, color_key] + SYSEX_FOOTER)
+      }
+    end
     
-    def flash(x, y, color_key)
+    def flash1(x, y, color_key)
       note = note(:grid, {:x => x, :y => y})
       output_sysex(SYSEX_HEADER + [35, 0, note, color_key] + SYSEX_FOOTER)
+    end
+    
+    def flashn(notes, color_key)
+      notes.each { |coord|
+        note = note(:grid, {:x => coord[0], :y => coord[1]})
+        output_sysex(SYSEX_HEADER + [35, 0, note, color_key, 0] + SYSEX_FOOTER)
+      }
     end
     
     def scroll(color_key, text, mode)
@@ -209,11 +223,23 @@ module Launchpad
       light_all(0)
     end
     
-    def light_column(column_key, color_key)
+    def lightn_column(column_keys, color_key)
+      column_keys.each { |column_key|
+        output_sysex(SYSEX_HEADER + [12, column_key, color_key] + SYSEX_FOOTER)
+      }
+    end
+    
+    def light1_column(column_key, color_key)
       output_sysex(SYSEX_HEADER + [12, column_key, color_key] + SYSEX_FOOTER)
     end
     
-    def light_row(row_key, color_key)
+    def lightn_row(rows_keys, color_key)
+      rows_keys.each { |row_key|
+      output_sysex(SYSEX_HEADER + [13, row_key, color_key] + SYSEX_FOOTER)
+      }
+    end
+    
+    def light1_row(row_key, color_key)
       output_sysex(SYSEX_HEADER + [13, row_key, color_key] + SYSEX_FOOTER)
     end
     
