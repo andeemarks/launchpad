@@ -222,12 +222,30 @@ describe Launchpad::Device do
       end
     end
 
+    describe '#pulsen' do
+      it "sends one message for each set of coordinates received" do
+        [[1, 4], [0, 6]].each do |coords|
+          expects_sysex_message(@device, [40, 0, (coords[1] + 1) * 10 + (coords[0] + 1), 24])
+        end
+        @device.pulsen([[1, 4], [0, 6]], 24)
+      end
+    end
+
     describe '#flash1' do
       [[1, 4, 24], [0, 6, 27]].each do |message|
         it "sends 35, 0, #{(message[1] + 1) * 10 + (message[0] + 1)}, #{message[2]} when given #{message}" do
           expects_sysex_message(@device, [35, 0, (message[1] + 1) * 10 + (message[0] + 1), message[2]])
           @device.flash1(message[0], message[1], message[2])
         end
+      end
+    end
+
+    describe '#flashn' do
+      it "sends one message for each set of coordinates received" do
+        [[1, 4], [0, 6]].each do |coords|
+          expects_sysex_message(@device, [35, 0, (coords[1] + 1) * 10 + (coords[0] + 1), 24, 0])
+        end
+        @device.flashn([[1, 4], [0, 6]], 24)
       end
     end
 
