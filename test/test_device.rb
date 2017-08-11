@@ -240,10 +240,10 @@ describe Launchpad::Device do
       end
     end
 
-    describe '#reset' do
+    describe '#reset_all' do
       it "sends 14, 0" do
         expects_sysex_message(@device, [14, 0])
-        @device.reset()
+        @device.reset_all()
       end
     end
 

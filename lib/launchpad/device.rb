@@ -219,7 +219,7 @@ module Launchpad
       output_sysex(SYSEX_HEADER + [14, color_key] + SYSEX_FOOTER)
     end
     
-    def reset()
+    def reset_all()
       light_all(0)
     end
     
