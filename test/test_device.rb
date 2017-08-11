@@ -240,6 +240,13 @@ describe Launchpad::Device do
       end
     end
 
+    describe '#reset' do
+      it "sends 14, 0" do
+        expects_sysex_message(@device, [14, 0])
+        @device.reset()
+      end
+    end
+
     describe '#light1_row' do
       [[1, 24], [0, 27]].each do |message|
         it "sends 13, #{message[0]}, #{message[1]} when given #{message}" do
