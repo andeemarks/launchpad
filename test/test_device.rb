@@ -208,67 +208,54 @@ describe Launchpad::Device do
     end
   end
 
-  describe '#pulse1' do
-    describe 'initialized with output' do
-      before do
-        @device = Launchpad::Device.new(:input => false)
-      end
+  describe 'top level API initialized with output' do
+    before do
+      @device = Launchpad::Device.new(:input => false)
+    end
 
+    describe '#pulse1' do
       [[1, 4, 24], [0, 6, 27]].each do |message|
         it "sends 40, 0, #{(message[1] + 1) * 10 + (message[0] + 1)}, #{message[2]} when given #{message}" do
           expects_sysex_message(@device, [40, 0, (message[1] + 1) * 10 + (message[0] + 1), message[2]])
           @device.pulse1(message[0], message[1], message[2])
         end
       end
-
     end
-  end
 
-  describe '#flash1' do
-    describe 'initialized with output' do
-      before do
-        @device = Launchpad::Device.new(:input => false)
-      end
-
+    describe '#flash1' do
       [[1, 4, 24], [0, 6, 27]].each do |message|
         it "sends 35, 0, #{(message[1] + 1) * 10 + (message[0] + 1)}, #{message[2]} when given #{message}" do
           expects_sysex_message(@device, [35, 0, (message[1] + 1) * 10 + (message[0] + 1), message[2]])
           @device.flash1(message[0], message[1], message[2])
         end
       end
-
     end
-  end
 
-  describe '#light1_row' do
-    describe 'initialized with output' do
-      before do
-        @device = Launchpad::Device.new(:input => false)
+    describe '#light_all' do
+      [24, 27].each do |message|
+        it "sends 14, #{message[0]} when given #{message}" do
+          expects_sysex_message(@device, [14, message[0]])
+          @device.light_all(message[0])
+        end
       end
+    end
 
+    describe '#light1_row' do
       [[1, 24], [0, 27]].each do |message|
         it "sends 13, #{message[0]}, #{message[1]} when given #{message}" do
           expects_sysex_message(@device, [13, message[0], message[1]])
           @device.light1_row(message[0], message[1])
         end
       end
-
     end
-  end
 
-  describe '#light1_column' do
-    describe 'initialized with output' do
-      before do
-        @device = Launchpad::Device.new(:input => false)
-      end
-
+    describe '#light1_column' do
       [[1, 24], [0, 27]].each do |message|
         it "sends 12, #{message[0]}, #{message[1]} when given #{message}" do
           expects_sysex_message(@device, [12, message[0], message[1]])
           @device.light1_column(message[0], message[1])
         end
       end
-
     end
   end
 
