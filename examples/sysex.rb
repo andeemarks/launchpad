@@ -2,7 +2,7 @@ require 'launchpad'
 
 device = Launchpad::Device.new(:input => false, :output => true)
 
-device.reset()
+device.reset_all()
 # sleep 0.5
 device.lightn_column([0, 3,6], 45)
 # sleep 0.5
@@ -23,7 +23,7 @@ device.pulsen([[4, 1],[4, 2],[4, 3],[4, 4]], 63)
 sleep 2
 # device.pulse(3, 3, 45)
 # sleep 2
-device.reset()
+device.reset_all()
 # device.pulse(3, 3, 63)
 # sleep 2
 # device.scroll_once(45, "Oscar is a snot monster")

@@ -45,7 +45,6 @@ interaction.response_to(:user2, :down, &choose_color(current_color, :mode => :no
 
 # update scene buttons and start flashing
 update_scene_buttons(interaction.device, current_color)
-interaction.device.flashing_auto
 
 # feedback for grid buttons
 interaction.response_to(:grid, :down) do |interaction, action|
@@ -56,6 +55,7 @@ end
 interaction.response_to(:mixer) do |interaction, action|
   interaction.device.change(:mixer, :color => action[:state] == :down ? 5 : 61)
   interaction.stop if action[:state] == :up
+  interaction.device.reset_all()
 end
 
 # start interacting
