@@ -4,12 +4,12 @@ interaction = Launchpad::Interaction.new
 
 # yellow feedback for grid buttons
 interaction.response_to(:grid) do |interaction, action|
-  	interaction.device.change(:grid, :x => action[:x], :y => action[:y], :color => 13)
+  	interaction.device.change(:grid, :x => action[:x], :y => action[:y], :color => 72)
 end
 
 # red feedback for top control buttons
 interaction.response_to([:up, :down, :left, :right, :session, :user1, :user2, :mixer]) do |interaction, action|
-  interaction.device.change(action[:type], :color => 72)
+  interaction.device.change(action[:type], :color => 13)
 end
 
 # green feedback for scene buttons
