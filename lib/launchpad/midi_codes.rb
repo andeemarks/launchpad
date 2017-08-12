@@ -8,7 +8,6 @@ module Launchpad
       NIL           = 0x00
       OFF           = 0x80
       ON            = 0x90
-      MULTI         = 0x92
       CC            = 0xB0
     end
     
@@ -34,12 +33,6 @@ module Launchpad
       SCENE6        = 0x27
       SCENE7        = 0x1D
       SCENE8        = 0x13
-    end
-    
-    # Module defining MIDI data 2 codes for selecting the grid layout.
-    module GridLayout
-      XY            = 0x01
-      DRUM_RACK     = 0x02
     end
     
   end

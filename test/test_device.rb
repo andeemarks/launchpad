@@ -12,6 +12,7 @@ describe Launchpad::Device do
     :user2    => 0x6E,
     :mixer    => 0x6F
   }
+  
   SCENE_BUTTONS = {
     :scene1   => 0x59,
     :scene2   => 0x4F,
