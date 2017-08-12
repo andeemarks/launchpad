@@ -154,8 +154,8 @@ module Launchpad
     # 
     # [<tt>:x</tt>]     x coordinate
     # [<tt>:y</tt>]     y coordinate
-    # [<tt>:red</tt>]   brightness of red LED
-    # [<tt>:green</tt>] brightness of green LED
+    # [<tt>color</tt>]  color of the LED (value between 0 and 127 inclusive)
+    #                   optional, defaults to <tt>:off</tt>
     # [<tt>:mode</tt>]  button mode, defaults to <tt>:normal</tt>, one of:
     #                   [<tt>:normal/tt>]     updates the LED for all circumstances (the new value will be written to both buffers)
     #                   [<tt>:flashing/tt>]   updates the LED for flashing (the new value will be written to buffer 0 while the LED will be off in buffer 1, see buffering_mode)
@@ -164,7 +164,7 @@ module Launchpad
     # Errors raised:
     # 
     # [Launchpad::NoValidGridCoordinatesError] when coordinates aren't within the valid range
-    # [Launchpad::NoValidBrightnessError] when brightness values aren't within the valid range
+    # [Launchpad::NoValidColorError] when color value isn't within the valid range
     # [Launchpad::NoOutputAllowedError] when output is not enabled
     def change(type, opts = nil)
       opts ||= {}
@@ -448,8 +448,8 @@ module Launchpad
     # 
     # Options hash:
     # 
-    # [<tt>:red</tt>]   brightness of red LED
-    # [<tt>:green</tt>] brightness of green LED
+    # [<tt>color</tt>]  color of the LED (value between 0 and 127 inclusive)
+    #                   optional, defaults to <tt>:off</tt>
     # [<tt>:mode</tt>]  button mode, defaults to <tt>:normal</tt>, one of:
     #                   [<tt>:normal/tt>]     updates the LED for all circumstances (the new value will be written to both buffers)
     #                   [<tt>:flashing/tt>]   updates the LED for flashing (the new value will be written to buffer 0 while in buffer 1, the value will be :off, see )
@@ -458,10 +458,6 @@ module Launchpad
     # Returns:
     # 
     # integer to be used for MIDI data 2
-    # 
-    # Errors raised:
-    # 
-    # [Launchpad::NoValidBrightnessError] when brightness values aren't within the valid range
     def velocity(opts)
       if opts.is_a?(Hash)
         color = color(opts[:color]) || 0
@@ -482,12 +478,12 @@ module Launchpad
       else
         if (not (color_key.is_a? Integer))
           logger.error "wrong color specified: color_key=#{color_key}"
-          raise NoValidBrightnessError.new("you need to specify a valid color (0-127), you specified: color_key=#{color_key}")
+          raise NoValidColorError.new("you need to specify a valid color (0-127), you specified: color_key=#{color_key}")
         end
 
         if color_key < 0 || color_key > 127
           logger.error "wrong color specified: color_key=#{color_key}"
-          raise NoValidBrightnessError.new("you need to specify a valid color (0-127), you specified: color_key=#{color_key}")
+          raise NoValidColorError.new("you need to specify a valid color (0-127), you specified: color_key=#{color_key}")
         end
 
         color_key

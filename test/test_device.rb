@@ -376,20 +376,20 @@ describe Launchpad::Device do
           end
         end
         
-        it 'raises NoValidBrightnessError if color is below 0' do
-          assert_raises Launchpad::NoValidBrightnessError do
+        it 'raises NoValidColorError if color is below 0' do
+          assert_raises Launchpad::NoValidColorError do
             @device.change(:grid, :x => 0, :y => 0, :color => -1)
           end
         end
         
-        it 'raises NoValidBrightnessError if color is above 127' do
-          assert_raises Launchpad::NoValidBrightnessError do
+        it 'raises NoValidColorError if color is above 127' do
+          assert_raises Launchpad::NoValidColorError do
             @device.change(:grid, :x => 0, :y => 0, :color => 128)
           end
         end
         
-        it 'raises NoValidBrightnessError if color is an unknown symbol' do
-          assert_raises Launchpad::NoValidBrightnessError do
+        it 'raises NoValidColorError if color is an unknown symbol' do
+          assert_raises Launchpad::NoValidColorError do
             @device.change(:grid, :x => 0, :y => 0, :color => :unknown)
           end
         end

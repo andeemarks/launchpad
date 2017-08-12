@@ -22,7 +22,7 @@ module Launchpad
   class NoValidGridCoordinatesError < LaunchpadError; end
   
   # Error raised when wrong brightness was specified.
-  class NoValidBrightnessError < LaunchpadError; end
+  class NoValidColorError < LaunchpadError; end
   
   # Error raised when anything fails while communicating
   # with the launchpad.

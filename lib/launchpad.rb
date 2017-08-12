@@ -14,14 +14,9 @@ require 'launchpad/interaction'
 #                       :scene1 - :scene8
 #                       </tt>
 # [<tt>x/y</tt>]        x/y coordinate (used when type is set to :grid),
-#                       <tt>0-7</tt> (from left to right/top to bottom),
+#                       <tt>0-7</tt> (from left to right/bottom to top),
 #                       mandatory when +type+ is set to <tt>:grid</tt>
-# [<tt>red/green</tt>]  brightness of the red/green LED,
-#                       can be set to one of four levels:
-#                       * off (<tt>:off, 0</tt>)
-#                       * low brightness (<tt>:low, :lo, 1</tt>)
-#                       * medium brightness (<tt>:medium, :med, 2</tt>)
-#                       * full brightness (<tt>:high, :hi, 3</tt>)
+# [<tt>color</tt>]  	color of the LED (value between 0 and 127 inclusive)
 #                       optional, defaults to <tt>:off</tt>
 # [+mode+]              button mode,
 #                       one of
