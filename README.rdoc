@@ -2,13 +2,13 @@
 
 {<img src="https://travis-ci.org/andeemarks/launchpad.png?branch=master" alt="Build Status" />}[https://travis-ci.org/andeemarks/launchpad]
 
-This gem provides a Ruby interface to access the {Novation Launchpad MK2}[https://global.novationmusic.com/launch/launchpad#] programmatically.  The code started life as a clone of {Thomas Jachman's gem}[https://github.com/thomasjachmann/launchpad] and was subsequently updated to handle the MK2 version of the Launchpad.
+This gem provides a Ruby interface to access the {Novation Launchpad MK2}[https://global.novationmusic.com/launch/launchpad#] programmatically.  The code started life as a clone of {Thomas Jachman's gem}[https://github.com/thomasjachmann/launchpad] and was subsequently updated to handle the MK2 version of the Launchpad.  The mapping of buttons and specification of colours completely changed when the MK2 was released, so lots of the original code in these areas has been re-written, but the interaction code is still largely intact.
 
 == More Info
 
 * Novation's Launchpad MK2 MIDI programmer's reference {here}[https://global.novationmusic.com/sites/default/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide_0.pdf] was the sole source for helping me understand how to interact with the Launchpad.
 
-* Due to limitations in the Portmidi gem where it's not possible to specify which channel is used to send MIDI messages, all comms with the Launchpad is done via the default channel 1.  This means some workarounds have been needed to access functionality like flash and pulse, which usually require channel 2 messages.  All of these workarounds have been implemented via sending System Exclusive messages as per the above reference guide.
+* Due to limitations in the Portmidi gem, it's not possible to specify which channel is used to send MIDI messages.  As such, all interaction with the Launchpad are done over the default channel 1.  This means some workarounds have been needed to access functionality like flash and pulse, which usually require channel 2 messages.  All of these workarounds have been implemented via sending {System Exclusive messages}[http://electronicmusic.wikia.com/wiki/System_exclusive] as per the above reference guide.
 
 == Requirements
 
