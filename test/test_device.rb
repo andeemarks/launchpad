@@ -22,12 +22,7 @@ describe Launchpad::Device do
     :scene7   => 0x1D,
     :scene8   => 0x13
   }
-  COLORS = {
-    nil => 0, 0 => 0, :off => 0,
-    1 => 1, :lo => 1, :low => 1,
-    2 => 2, :med => 2, :medium => 2,
-    3 => 3, :hi => 3, :high => 3
-  }
+
   STATES = {
     :down     => 127,
     :up       => 0
