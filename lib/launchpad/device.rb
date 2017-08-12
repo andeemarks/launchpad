@@ -493,27 +493,6 @@ module Launchpad
         color_key
       end
     end
-
-    # Calculates the integer brightness for given brightness values.
-    # 
-    # Parameters (see Launchpad for values):
-    # 
-    # [+brightness+] brightness
-    # 
-    # Errors raised:
-    # 
-    # [Launchpad::NoValidBrightnessError] when brightness values aren't within the valid range
-    def brightness(brightness)
-      case brightness
-      when 0, :off            then 0
-      when 1, :low,     :lo   then 1
-      when 2, :medium,  :med  then 2
-      when 3, :high,    :hi   then 3
-      else
-        logger.error "wrong brightness specified: #{brightness}"
-        raise NoValidBrightnessError.new("you need to specify the brightness as 0/1/2/3, :off/:low/:medium/:high or :off/:lo/:hi, you specified: #{brightness}")
-      end
-    end
     
     # Creates a MIDI message.
     # 
