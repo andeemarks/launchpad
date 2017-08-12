@@ -133,8 +133,6 @@ module Launchpad
         rescue Exception => e
           logger.fatal "error causing action reading to stop: #{e.inspect}"
           raise e
-        ensure
-          @device.reset
         end
       end
       @reader_thread.join unless opts[:detached]

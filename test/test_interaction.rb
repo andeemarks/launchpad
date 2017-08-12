@@ -280,15 +280,9 @@ describe Launchpad::Interaction do
       
     end
     
-    it 'resets the device after the loop' do
-      @interaction.device.expects(:reset)
-      @interaction.start(:detached => true)
-      @interaction.stop
-    end
-    
-    it 'raises NoOutputAllowedError on closed interaction' do
+    it 'raises NoInputAllowedError on closed interaction' do
       @interaction.close
-      assert_raises Launchpad::NoOutputAllowedError do
+      assert_raises Launchpad::NoInputAllowedError do
         @interaction.start
       end
     end

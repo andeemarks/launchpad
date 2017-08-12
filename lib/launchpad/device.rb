@@ -107,8 +107,6 @@ module Launchpad
         :id => opts[:output_device_id],
         :name => opts[:device_name]
       ) if opts[:output]
-
-      reset if output_enabled?
     end
     
     # Closes the device - nothing can be done with the device afterwards.
@@ -133,15 +131,6 @@ module Launchpad
     # Determines whether this device can be used to output data.
     def output_enabled?
       !@output.nil?
-    end
-    
-    # Resets the launchpad - all settings are reset and all LEDs are switched off.
-    # 
-    # Errors raised:
-    # 
-    # [Launchpad::NoOutputAllowedError] when output is not enabled
-    def reset
-      output(Status::CC, Status::NIL, Status::NIL)
     end
     
     # Changes a single LED.

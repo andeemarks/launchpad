@@ -145,7 +145,7 @@ describe Launchpad::Device do
       
       before do
         Portmidi::Input.stubs(:new).returns(@input = mock('input'))
-        Portmidi::Output.stubs(:new).returns(@output = mock('output', :write => nil))
+        Portmidi::Output.stubs(:new).returns(@output = mock('output'))
         @device = Launchpad::Device.new
       end
       
@@ -186,26 +186,6 @@ describe Launchpad::Device do
       assert d.closed?
     end
     
-  end
-  
-  {
-    :reset          => [0xB0, 0x00, 0x00]
-  }.each do |method, codes|
-    describe "##{method}" do
-    
-      it 'raises NoOutputAllowedError when not initialized with output' do
-        assert_raises Launchpad::NoOutputAllowedError do
-          Launchpad::Device.new(:output => false).send(method)
-        end
-      end
-    
-      it "sends #{codes.inspect}" do
-        d = Launchpad::Device.new
-        expects_output(d, *codes)
-        d.send(method)
-      end
-    
-    end
   end
 
   describe 'top level API initialized with output' do
