@@ -18,12 +18,6 @@ require 'launchpad/interaction'
 #                       mandatory when +type+ is set to <tt>:grid</tt>
 # [<tt>color</tt>]  	color of the LED (value between 0 and 127 inclusive)
 #                       optional, defaults to <tt>:off</tt>
-# [+mode+]              button mode,
-#                       one of
-#                       * <tt>:normal</tt>
-#                       * <tt>:flashing</tt> (LED is marked as flashing, see Launchpad::Device.flashing_on, Launchpad::Device.flashing_off and Launchpad::Device.flashing_auto)
-#                       * <tt>:buffering</tt> (LED is written to buffer, see Launchpad::Device.start_buffering, Launchpad::Device.flush_buffer)
-#                       optional, defaults to <tt>:normal</tt>
 # [+state+]             whether the button is pressed or released, <tt>:down/:up</tt>
 module Launchpad
 end

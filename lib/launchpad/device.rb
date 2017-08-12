@@ -145,10 +145,6 @@ module Launchpad
     # [<tt>:y</tt>]     y coordinate
     # [<tt>color</tt>]  color of the LED (value between 0 and 127 inclusive)
     #                   optional, defaults to <tt>:off</tt>
-    # [<tt>:mode</tt>]  button mode, defaults to <tt>:normal</tt>, one of:
-    #                   [<tt>:normal/tt>]     updates the LED for all circumstances (the new value will be written to both buffers)
-    #                   [<tt>:flashing/tt>]   updates the LED for flashing (the new value will be written to buffer 0 while the LED will be off in buffer 1, see buffering_mode)
-    #                   [<tt>:buffering/tt>]  updates the LED for the current update_buffer only
     # 
     # Errors raised:
     # 
@@ -414,10 +410,6 @@ module Launchpad
     # 
     # [<tt>color</tt>]  color of the LED (value between 0 and 127 inclusive)
     #                   optional, defaults to <tt>:off</tt>
-    # [<tt>:mode</tt>]  button mode, defaults to <tt>:normal</tt>, one of:
-    #                   [<tt>:normal/tt>]     updates the LED for all circumstances (the new value will be written to both buffers)
-    #                   [<tt>:flashing/tt>]   updates the LED for flashing (the new value will be written to buffer 0 while in buffer 1, the value will be :off, see )
-    #                   [<tt>:buffering/tt>]  updates the LED for the current update_buffer only
     # 
     # Returns:
     # 
@@ -425,12 +417,6 @@ module Launchpad
     def velocity(opts)
       if opts.is_a?(Hash)
         color = color(opts[:color]) || 0
-        flags = case opts[:mode]
-                when :flashing  then  8
-                when :buffering then  0
-                else                  0
-                end
-        color + flags
       else
         opts.to_i + 12
       end

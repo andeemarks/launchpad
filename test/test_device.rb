@@ -12,7 +12,7 @@ describe Launchpad::Device do
     :user2    => 0x6E,
     :mixer    => 0x6F
   }
-  
+
   SCENE_BUTTONS = {
     :scene1   => 0x59,
     :scene2   => 0x4F,
@@ -377,21 +377,6 @@ describe Launchpad::Device do
         it 'sends 0 when nothing given' do
           expects_output(@device, 0x90, 11, 0)
           @device.change(:grid, :x => 0, :y => 0)
-        end
-        
-        it 'sends 0 when given :normal' do
-          expects_output(@device, 0x90, 11, 0)
-          @device.change(:grid, :x => 0, :y => 0, :mode => :normal)
-        end
-        
-        it 'sends 8 when given :flashing' do
-          expects_output(@device, 0x90, 11, 8)
-          @device.change(:grid, :x => 0, :y => 0, :mode => :flashing)
-        end
-        
-        it 'sends 0 when given :buffering' do
-          expects_output(@device, 0x90, 11, 0)
-          @device.change(:grid, :x => 0, :y => 0, :mode => :buffering)
         end
         
       end
