@@ -232,31 +232,6 @@ module Launchpad
       output_sysex(SYSEX_HEADER + [13, row_key, color_key] + SYSEX_FOOTER)
     end
     
-    # Controls the two buffers.
-    # 
-    # Optional options hash:
-    # 
-    # [<tt>:display_buffer</tt>]  which buffer to use for display, defaults to +0+
-    # [<tt>:update_buffer</tt>]   which buffer to use for updates when <tt>:mode</tt> is set to <tt>:buffering</tt>, defaults to +0+ (see change)
-    # [<tt>:copy</tt>]            whether to copy the LEDs states from the new display_buffer over to the new update_buffer, <tt>true/false</tt>, defaults to <tt>false</tt>
-    # [<tt>:flashing</tt>]        whether to start flashing by automatically switching between the two buffers for display, <tt>true/false</tt>, defaults to <tt>false</tt>
-    # 
-    # Errors raised:
-    # 
-    # [Launchpad::NoOutputAllowedError] when output is not enabled
-    def buffering_mode(opts = nil)
-      opts = {
-        :display_buffer => 0,
-        :update_buffer => 0,
-        :copy => false,
-        :flashing => false
-      }.merge(opts || {})
-      data = opts[:display_buffer] + 4 * opts[:update_buffer] + 32
-      data += 16 if opts[:copy]
-      data += 8 if opts[:flashing]
-      output(Status::CC, Status::NIL, data)
-    end
-    
     # Reads user actions (button presses/releases) that haven't been handled yet.
     # This is non-blocking, so when nothing happend yet you'll get an empty array.
     # 

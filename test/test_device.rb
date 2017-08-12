@@ -404,37 +404,6 @@ describe Launchpad::Device do
     
   end
   
-  describe '#buffering_mode' do
-    
-    it 'raises NoOutputAllowedError when not initialized with output' do
-      assert_raises Launchpad::NoOutputAllowedError do
-        Launchpad::Device.new(:output => false).buffering_mode
-      end
-    end
-    
-    {
-      nil                     => [0xB0, 0x00, 0x20],
-      {}                      => [0xB0, 0x00, 0x20],
-      {:display_buffer => 1}  => [0xB0, 0x00, 0x21],
-      {:update_buffer => 1}   => [0xB0, 0x00, 0x24],
-      {:copy => true}         => [0xB0, 0x00, 0x30],
-      {:flashing => true}     => [0xB0, 0x00, 0x28],
-      {
-        :display_buffer => 1,
-        :update_buffer  => 1,
-        :copy           => true,
-        :flashing       => true
-      }                       => [0xB0, 0x00, 0x3D]
-    }.each do |opts, codes|
-      it "sends #{codes.inspect} when called with #{opts.inspect}" do
-        d = Launchpad::Device.new
-        expects_output(d, *codes)
-        d.buffering_mode(opts)
-      end
-    end
-    
-  end
-  
   describe '#read_pending_actions' do
     
     it 'raises NoInputAllowedError when not initialized with input' do
