@@ -19,6 +19,7 @@ end
 
 # mixer button terminates interaction on button up
 interaction.response_to(:mixer, :up) do |interaction, action|
+	interaction.device.reset_all()
   interaction.stop
 end
 
