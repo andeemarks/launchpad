@@ -2,13 +2,13 @@
 
 {<img src="https://travis-ci.org/andeemarks/launchpad.png?branch=master" alt="Build Status" />}[https://travis-ci.org/andeemarks/launchpad]
 
-This gem provides a Ruby interface to access the {Novation Launchpad MK2}[https://global.novationmusic.com/launch/launchpad#] programmatically.
-
-This gem started life as a clone of {Thomas Jachman's gem}[https://github.com/thomasjachmann/launchpad] and was updated to handle the MK2 version of the Launchpad.
+This gem provides a Ruby interface to access the {Novation Launchpad MK2}[https://global.novationmusic.com/launch/launchpad#] programmatically.  The code started life as a clone of {Thomas Jachman's gem}[https://github.com/thomasjachmann/launchpad] and was subsequently updated to handle the MK2 version of the Launchpad.
 
 == More Info
 
-* Novation's Launchpad MK2 MIDI programmer's reference {here}[https://global.novationmusic.com/sites/default/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide_0.pdf]
+* Novation's Launchpad MK2 MIDI programmer's reference {here}[https://global.novationmusic.com/sites/default/files/novation/downloads/10529/launchpad-mk2-programmers-reference-guide_0.pdf] was the sole source for helping me understand how to interact with the Launchpad.
+
+* Due to limitations in the Portmidi gem where it's not possible to specify which channel is used to send MIDI messages, all comms with the Launchpad is done via the default channel 1.  This means some workarounds have been needed to access functionality like flash and pulse, which usually require channel 2 messages.  All of these workarounds have been implemented via sending System Exclusive messages as per the above reference guide.
 
 == Requirements
 
@@ -32,7 +32,7 @@ The gem is hosted on RubyGems[https://rubygems.org/], so in order to use it, you
 
 There are two main entry points:
 
-* <code>require 'launchpad/device'</code>, providing Launchpad::Device, which handles all the basic input/output stuff
+* <code>require 'launchpad/device'</code>, providing <code>Launchpad::Device</code>, which handles all the basic input/output stuff
 * <code>require 'launchpad/interaction'</code> or just 'launchpad', additionally providing <code>Launchpad::Interaction</code>, which lets you respond to actions (button presses/releases)
 
 This is a simple example (only requiring the device for output) that resets the launchpad and then lights the grid button at position 4/4 (from bottom left of 0/0).
