@@ -2,6 +2,9 @@ require 'launchpad'
 
 interaction = Launchpad::Interaction.new
 
+UP = -1
+DOWN = 1
+
 @left_bottom_edge = @right_bottom_edge = 3
 
 def move_flipper(flipper, d, delta, column)
@@ -34,13 +37,13 @@ interaction.response_to(:grid, :down) do |interaction, action|
 	x = action[:x]
 	y = action[:y]
 	if (x == 0 && y == 0)
-		move_left_flipper(interaction.device, -1)
+		move_left_flipper(interaction.device, UP)
 	elsif (x == 0 && y == 7)
-		move_left_flipper(interaction.device, 1)
+		move_left_flipper(interaction.device, DOWN)
 	elsif (x == 7 && y == 0)
-		move_right_flipper(interaction.device, -1)
+		move_right_flipper(interaction.device, UP)
 	elsif (x == 7 && y == 7)
-		move_right_flipper(interaction.device, 1)
+		move_right_flipper(interaction.device, DOWN)
 	end
 end
 
@@ -60,8 +63,45 @@ interaction.response_to(:mixer, :up) do |interaction, action|
   interaction.stop
 end
 
+def run_ball_movement(d) 
+	Thread.new {
+		loop do
+			sleep 0.5
+			hide_ball(d, @ball_x, @ball_y)
+			if ((@ball_x + @lat_delta) < 1 || (@ball_x + @lat_delta) > 6)
+				@lat_delta = -@lat_delta
+			end
+			@ball_x = @ball_x + @lat_delta
+			if ((@ball_y + @lon_delta) < 0 || (@ball_y + @lon_delta) > 7)
+				@lon_delta = -@lon_delta
+			end
+			@ball_y = @ball_y + @lon_delta
+			show_ball(d, @ball_x, @ball_y)
+		end
+	}
+end
+
+def show_ball(d, x, y)
+	d.change(:grid, :x => x, :y => y, :color => 72)	
+end
+
+def hide_ball(d, x, y)
+	d.change(:grid, :x => x, :y => y, :color => 0)	
+end
+
+def start_ball(d)
+	@lat_delta = rand(2) == 0 ? -1 : 1
+	@lon_delta = rand(2) == 0 ? -1 : 1
+	@ball_x = @lat_delta == -1 ? 4 : 3
+	@ball_y = @lon_delta == -1 ? 4 : 3
+	puts "Ball moving using " + @lat_delta.to_s + ", " + @lon_delta.to_s + " from " + @ball_x.to_s + ", " + @ball_y.to_s
+	show_ball(d, @ball_x, @ball_y)
+end
+
 show_flipper(interaction.device, 0, @left_bottom_edge)
 show_flipper(interaction.device, 7, @right_bottom_edge)
+start_ball(interaction.device)
+run_ball_movement(interaction.device)
 # start interacting
 interaction.start
 
