@@ -4,22 +4,22 @@ interaction = Launchpad::Interaction.new
 
 @left_bottom_edge = @right_bottom_edge = 3
 
-def move_left_flipper(d, delta)
-	@left_bottom_edge = @left_bottom_edge + delta
-	if (@left_bottom_edge < 0 || @left_bottom_edge > 5)
-		@left_bottom_edge = @left_bottom_edge - delta
-		return
+def move_flipper(flipper, d, delta, column)
+	flipper = flipper + delta
+	if (flipper < 0 || flipper > 5)
+		return flipper - delta
 	end
-	show_flipper(d, 0, @left_bottom_edge)
+	show_flipper(d, column, flipper)
+
+	return flipper
+end
+
+def move_left_flipper(d, delta)
+	@left_bottom_edge = move_flipper(@left_bottom_edge, d, delta, 0)
 end
 
 def move_right_flipper(d, delta)
-	@right_bottom_edge = @right_bottom_edge + delta
-	if (@right_bottom_edge < 0 || @right_bottom_edge > 5)
-		@right_bottom_edge = @right_bottom_edge - delta
-		return
-	end
-	show_flipper(d, 7, @right_bottom_edge)
+	@right_bottom_edge = move_flipper(@right_bottom_edge, d, delta, 7)
 end
 
 def show_flipper(d, x, bottom_edge)
