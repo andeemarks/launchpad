@@ -1,6 +1,6 @@
 = launchpad
 
-{<img src="launchpad-gem-overview.gif" />}
+rdoc-image:launchpad-gem-overview.gif
 
 {<img src="https://travis-ci.org/andeemarks/launchpad.png?branch=master" alt="Build Status" />}[https://travis-ci.org/andeemarks/launchpad]
 
