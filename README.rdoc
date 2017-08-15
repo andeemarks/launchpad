@@ -64,6 +64,12 @@ This is an interaction example lighting all grid buttons in red when pressed and
 
 For more details, see the examples. examples/color_picker.rb is the most complex example with interaction.
 
+== To Do
+
+* Rename gem to avoid name clashes with original version
+* Ensure all examples are working
+* Update examples in README
+
 == Copyright
 
-Copyright (c) 2016 Andy Marks. See LICENSE for details.
+Copyright (c) 2017 Andy Marks. See LICENSE for details.
