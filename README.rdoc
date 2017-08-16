@@ -27,21 +27,21 @@ The gem is known to be compatible with the following ruby versions:
 
 The gem is hosted on RubyGems[https://rubygems.org/], so in order to use it, you're gonna gem install it:
 
-  gem install launchpad
+  gem install launchpad_mk2
 
 
 == Usage
 
 There are two main entry points:
 
-* <code>require 'launchpad/device'</code>, providing <code>Launchpad::Device</code>, which handles all the basic input/output stuff
-* <code>require 'launchpad/interaction'</code> or just 'launchpad', additionally providing <code>Launchpad::Interaction</code>, which lets you respond to actions (button presses/releases)
+* <code>require 'launchpad_mk2/device'</code>, providing <code>LaunchpadMk2::Device</code>, which handles all the basic input/output stuff
+* <code>require 'launchpad_mk2/interaction'</code> or just 'launchpad_mk2', additionally providing <code>LaunchpadMk2::Interaction</code>, which lets you respond to actions (button presses/releases)
 
 This is a simple example (only requiring the device for output) that resets the launchpad and then lights the grid button at position 4/4 (from bottom left of 0/0).
 
-  require 'launchpad/device'
+  require 'launchpad_mk2/device'
   
-  device = Launchpad::Device.new
+  device = LaunchpadMk2::Device.new
   sleep 1
   device.reset_all
   sleep 1
@@ -49,9 +49,9 @@ This is a simple example (only requiring the device for output) that resets the 
 
 This is an interaction example lighting all grid buttons in red when pressed and keeping them lit.
 
-  require 'launchpad'
+  require 'launchpad_mk2'
   
-  interaction = Launchpad::Interaction.new
+  interaction = LaunchpadMk2::Interaction.new
   interaction.response_to(:grid, :down) do |interaction, action|
     interaction.device.change(:grid, action.merge(:color => 72))
   end
@@ -66,9 +66,7 @@ For more details, see the examples. examples/color_picker.rb is the most complex
 
 == To Do
 
-* Rename gem to avoid name clashes with original version
 * Ensure all examples are working
-* Update examples in README
 
 == Copyright
 
