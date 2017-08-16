@@ -1,4 +1,4 @@
-require 'launchpad'
+require 'launchpad_mk2'
 
 interaction = Launchpad::Interaction.new
 

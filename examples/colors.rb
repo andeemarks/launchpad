@@ -1,4 +1,4 @@
-require 'launchpad'
+require 'launchpad_mk2'
 
 device = Launchpad::Device.new(:input => false, :output => true)
 
