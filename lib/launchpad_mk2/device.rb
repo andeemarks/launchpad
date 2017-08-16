@@ -1,20 +1,20 @@
 require 'portmidi'
 
-require 'launchpad/errors'
-require 'launchpad/logging'
-require 'launchpad/midi_codes'
-require 'launchpad/version'
+require 'launchpad_mk2/errors'
+require 'launchpad_mk2/logging'
+require 'launchpad_mk2/midi_codes'
+require 'launchpad_mk2/version'
 
-module Launchpad
+module LaunchpadMk2
   
   # This class is used to exchange data with the launchpad.
   # It provides methods to light LEDs and to get information about button presses/releases.
   # 
   # Example:
   # 
-  #   require 'launchpad/device'
+  #   require 'launchpad_mk2/device'
   #   
-  #   device = Launchpad::Device.new
+  #   device = LaunchpadMk2::Device.new
   #   device.test_leds
   #   sleep 1
   #   device.reset
@@ -84,8 +84,8 @@ module Launchpad
     # 
     # Errors raised:
     # 
-    # [Launchpad::NoSuchDeviceError] when device with ID or name specified does not exist
-    # [Launchpad::DeviceBusyError] when device with ID or name specified is busy
+    # [LaunchpadMk2::NoSuchDeviceError] when device with ID or name specified does not exist
+    # [LaunchpadMk2::DeviceBusyError] when device with ID or name specified is busy
     def initialize(opts = nil)
       @input = nil
       @output = nil
@@ -95,7 +95,7 @@ module Launchpad
       }.merge(opts || {})
       
       self.logger = opts[:logger]
-      logger.debug "initializing Launchpad::Device##{object_id} with #{opts.inspect}"
+      logger.debug "initializing LaunchpadMk2::Device##{object_id} with #{opts.inspect}"
 
       Portmidi.start
       
@@ -111,7 +111,7 @@ module Launchpad
     
     # Closes the device - nothing can be done with the device afterwards.
     def close
-      logger.debug "closing Launchpad::Device##{object_id}"
+      logger.debug "closing LaunchpadMk2::Device##{object_id}"
       @input.close unless @input.nil?
       @input = nil
       @output.close unless @output.nil?
@@ -148,9 +148,9 @@ module Launchpad
     # 
     # Errors raised:
     # 
-    # [Launchpad::NoValidGridCoordinatesError] when coordinates aren't within the valid range
-    # [Launchpad::NoValidColorError] when color value isn't within the valid range
-    # [Launchpad::NoOutputAllowedError] when output is not enabled
+    # [LaunchpadMk2::NoValidGridCoordinatesError] when coordinates aren't within the valid range
+    # [LaunchpadMk2::NoValidColorError] when color value isn't within the valid range
+    # [LaunchpadMk2::NoOutputAllowedError] when output is not enabled
     def change(type, opts = nil)
       opts ||= {}
       status = %w(up down left right session user1 user2 mixer).include?(type.to_s) ? Status::CC : Status::ON
@@ -243,7 +243,7 @@ module Launchpad
     # 
     # Errors raised:
     # 
-    # [Launchpad::NoInputAllowedError] when input is not enabled
+    # [LaunchpadMk2::NoInputAllowedError] when input is not enabled
     def read_pending_actions
       Array(input).collect do |midi_message|
         (code, note, velocity) = midi_message[:message]
@@ -282,8 +282,8 @@ module Launchpad
     # 
     # Errors raised:
     # 
-    # [Launchpad::NoSuchDeviceError] when device with ID or name specified does not exist
-    # [Launchpad::DeviceBusyError] when device with ID or name specified is busy
+    # [LaunchpadMk2::NoSuchDeviceError] when device with ID or name specified does not exist
+    # [LaunchpadMk2::DeviceBusyError] when device with ID or name specified is busy
     def create_device!(devices, device_type, opts)
       logger.debug "creating #{device_type} with #{opts.inspect}, choosing from portmidi devices #{devices.inspect}"
       id = opts[:id]
@@ -318,7 +318,7 @@ module Launchpad
     # 
     # Errors raised:
     # 
-    # [Launchpad::NoInputAllowedError] when output is not enabled
+    # [LaunchpadMk2::NoInputAllowedError] when output is not enabled
     def input
       if @input.nil?
         logger.error "trying to read from device that's not been initialized for input"
@@ -337,7 +337,7 @@ module Launchpad
     # 
     # Errors raised:
     # 
-    # [Launchpad::NoOutputAllowedError] when output is not enabled
+    # [LaunchpadMk2::NoOutputAllowedError] when output is not enabled
     def output(status, data1, data2)
       output_messages([message(status, data1, data2)])
     end
@@ -389,7 +389,7 @@ module Launchpad
     # 
     # Errors raised:
     # 
-    # [Launchpad::NoValidGridCoordinatesError] when coordinates aren't within the valid range
+    # [LaunchpadMk2::NoValidGridCoordinatesError] when coordinates aren't within the valid range
     def note(type, opts)
       note = TYPE_TO_NOTE[type]
       if note.nil?

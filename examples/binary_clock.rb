@@ -1,6 +1,6 @@
 require 'launchpad_mk2'
 
-device = Launchpad::Device.new
+device = LaunchpadMk2::Device.new
 
 on = { :color => 16 }
 off = { :color => 72 }

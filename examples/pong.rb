@@ -1,6 +1,6 @@
 require 'launchpad_mk2'
 
-interaction = Launchpad::Interaction.new
+interaction = LaunchpadMk2::Interaction.new
 
 UP = -1
 DOWN = 1

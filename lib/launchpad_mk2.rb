@@ -1,9 +1,9 @@
-require 'launchpad/interaction'
+require 'launchpad_mk2/interaction'
 
 # All the fun of launchpad in one module!
 # 
-# See Launchpad::Device for basic access to launchpad input/ouput
-# and Launchpad::Interaction for advanced interaction features.
+# See LaunchpadMk2::Device for basic access to launchpad input/ouput
+# and LaunchpadMk2::Interaction for advanced interaction features.
 # 
 # The following parameters will be used throughout the library, so here are the ranges:
 # 

@@ -1,6 +1,6 @@
 require 'launchpad_mk2'
 
-device = Launchpad::Device.new(:input => false, :output => true)
+device = LaunchpadMk2::Device.new(:input => false, :output => true)
 
 color = 0
 # first page of colors

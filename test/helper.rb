@@ -41,5 +41,5 @@ module Portmidi
 end
 
 def mock_devices(opts = {})
-  [Portmidi::Device.new(opts[:id] || 1, 0, 0, opts[:name] || Launchpad::Device::MK2_DEVICE_NAME)]
+  [Portmidi::Device.new(opts[:id] || 1, 0, 0, opts[:name] || LaunchpadMk2::Device::MK2_DEVICE_NAME)]
 end

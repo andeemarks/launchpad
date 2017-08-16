@@ -1,6 +1,6 @@
 require 'launchpad_mk2'
 
-device = Launchpad::Device.new(:input => false, :output => true)
+device = LaunchpadMk2::Device.new(:input => false, :output => true)
 
 device.reset_all()
 # sleep 0.5

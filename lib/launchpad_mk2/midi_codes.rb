@@ -1,4 +1,4 @@
-module Launchpad
+module LaunchpadMk2
   
   # Module defining constants for MIDI codes.
   module MidiCodes

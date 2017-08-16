@@ -1,4 +1,4 @@
-module Launchpad
+module LaunchpadMk2
   
   # Generic launchpad error.
   class LaunchpadError < StandardError; end

@@ -1,6 +1,6 @@
 require 'helper'
 
-describe Launchpad::Device do
+describe LaunchpadMk2::Device do
   
   CONTROL_BUTTONS = {
     :up       => 0x68,
@@ -36,7 +36,7 @@ describe Launchpad::Device do
   end
 
   def expects_sysex_message(device, message)
-    device.instance_variable_get('@output').expects(:write_sysex).with(Launchpad::Device::SYSEX_HEADER + message  + Launchpad::Device::SYSEX_FOOTER)
+    device.instance_variable_get('@output').expects(:write_sysex).with(LaunchpadMk2::Device::SYSEX_HEADER + message  + LaunchpadMk2::Device::SYSEX_FOOTER)
   end
   
   def stub_input(device, *args)
@@ -48,21 +48,21 @@ describe Launchpad::Device do
     it 'tries to initialize both input and output when not specified' do
       Portmidi.expects(:input_devices).returns(mock_devices)
       Portmidi.expects(:output_devices).returns(mock_devices)
-      d = Launchpad::Device.new
+      d = LaunchpadMk2::Device.new
       refute_nil d.instance_variable_get('@input')
       refute_nil d.instance_variable_get('@output')
     end
     
     it 'does not try to initialize input when set to false' do
       Portmidi.expects(:input_devices).never
-      d = Launchpad::Device.new(:input => false)
+      d = LaunchpadMk2::Device.new(:input => false)
       assert_nil d.instance_variable_get('@input')
       refute_nil d.instance_variable_get('@output')
     end
     
     it 'does not try to initialize output when set to false' do
       Portmidi.expects(:output_devices).never
-      d = Launchpad::Device.new(:output => false)
+      d = LaunchpadMk2::Device.new(:output => false)
       refute_nil d.instance_variable_get('@input')
       assert_nil d.instance_variable_get('@output')
     end
@@ -70,7 +70,7 @@ describe Launchpad::Device do
     it 'does not try to initialize any of both when set to false' do
       Portmidi.expects(:input_devices).never
       Portmidi.expects(:output_devices).never
-      d = Launchpad::Device.new(:input => false, :output => false)
+      d = LaunchpadMk2::Device.new(:input => false, :output => false)
       assert_nil d.instance_variable_get('@input')
       assert_nil d.instance_variable_get('@output')
     end
@@ -78,7 +78,7 @@ describe Launchpad::Device do
     it 'initializes the correct input output devices when specified by name' do
       Portmidi.stubs(:input_devices).returns(mock_devices(:id => 4, :name => 'Launchpad Name'))
       Portmidi.stubs(:output_devices).returns(mock_devices(:id => 5, :name => 'Launchpad Name'))
-      d = Launchpad::Device.new(:device_name => 'Launchpad Name')
+      d = LaunchpadMk2::Device.new(:device_name => 'Launchpad Name')
       assert_equal Portmidi::Input, (input = d.instance_variable_get('@input')).class
       assert_equal 4, input.device_id
       assert_equal Portmidi::Output, (output = d.instance_variable_get('@output')).class
@@ -88,7 +88,7 @@ describe Launchpad::Device do
     it 'initializes the correct input output devices when specified by id' do
       Portmidi.stubs(:input_devices).returns(mock_devices(:id => 4))
       Portmidi.stubs(:output_devices).returns(mock_devices(:id => 5))
-      d = Launchpad::Device.new(:input_device_id => 4, :output_device_id => 5, :device_name => 'nonexistant')
+      d = LaunchpadMk2::Device.new(:input_device_id => 4, :output_device_id => 5, :device_name => 'nonexistant')
       assert_equal Portmidi::Input, (input = d.instance_variable_get('@input')).class
       assert_equal 4, input.device_id
       assert_equal Portmidi::Output, (output = d.instance_variable_get('@output')).class
@@ -96,36 +96,36 @@ describe Launchpad::Device do
     end
     
     it 'raises NoSuchDeviceError when requested input device does not exist' do
-      assert_raises Launchpad::NoSuchDeviceError do
+      assert_raises LaunchpadMk2::NoSuchDeviceError do
         Portmidi.stubs(:input_devices).returns(mock_devices(:name => 'Launchpad Input'))
-        Launchpad::Device.new
+        LaunchpadMk2::Device.new
       end
     end
     
     it 'raises NoSuchDeviceError when requested output device does not exist' do
-      assert_raises Launchpad::NoSuchDeviceError do
+      assert_raises LaunchpadMk2::NoSuchDeviceError do
         Portmidi.stubs(:output_devices).returns(mock_devices(:name => 'Launchpad Output'))
-        Launchpad::Device.new
+        LaunchpadMk2::Device.new
       end
     end
     
     it 'raises DeviceBusyError when requested input device is busy' do
-      assert_raises Launchpad::DeviceBusyError do
+      assert_raises LaunchpadMk2::DeviceBusyError do
         Portmidi::Input.stubs(:new).raises(RuntimeError)
-        Launchpad::Device.new
+        LaunchpadMk2::Device.new
       end
     end
     
     it 'raises DeviceBusyError when requested output device is busy' do
-      assert_raises Launchpad::DeviceBusyError do
+      assert_raises LaunchpadMk2::DeviceBusyError do
         Portmidi::Output.stubs(:new).raises(RuntimeError)
-        Launchpad::Device.new
+        LaunchpadMk2::Device.new
       end
     end
     
     it 'stores the logger given' do
       logger = Logger.new(nil)
-      device = Launchpad::Device.new(:logger => logger)
+      device = LaunchpadMk2::Device.new(:logger => logger)
       assert_same logger, device.logger
     end
     
@@ -134,7 +134,7 @@ describe Launchpad::Device do
   describe '#close' do
     
     it 'does not fail when neither input nor output are there' do
-      Launchpad::Device.new(:input => false, :output => false).close
+      LaunchpadMk2::Device.new(:input => false, :output => false).close
     end
     
     describe 'with input and output devices' do
@@ -142,17 +142,17 @@ describe Launchpad::Device do
       before do
         Portmidi::Input.stubs(:new).returns(@input = mock('input'))
         Portmidi::Output.stubs(:new).returns(@output = mock('output'))
-        @device = Launchpad::Device.new
+        @device = LaunchpadMk2::Device.new
       end
       
       it 'closes input/output and raise NoInputAllowedError/NoOutputAllowedError on subsequent read/write accesses' do
         @input.expects(:close)
         @output.expects(:close)
         @device.close
-        assert_raises Launchpad::NoInputAllowedError do
+        assert_raises LaunchpadMk2::NoInputAllowedError do
           @device.read_pending_actions
         end
-        assert_raises Launchpad::NoOutputAllowedError do
+        assert_raises LaunchpadMk2::NoOutputAllowedError do
           @device.change(:session)
         end
       end
@@ -164,19 +164,19 @@ describe Launchpad::Device do
   describe '#closed?' do
     
     it 'returns true when neither input nor output are there' do
-      assert Launchpad::Device.new(:input => false, :output => false).closed?
+      assert LaunchpadMk2::Device.new(:input => false, :output => false).closed?
     end
     
     it 'returns false when initialized with input' do
-      assert !Launchpad::Device.new(:input => true, :output => false).closed?
+      assert !LaunchpadMk2::Device.new(:input => true, :output => false).closed?
     end
     
     it 'returns false when initialized with output' do
-      assert !Launchpad::Device.new(:input => false, :output => true).closed?
+      assert !LaunchpadMk2::Device.new(:input => false, :output => true).closed?
     end
     
     it 'returns false when initialized with both but true after calling close' do
-      d = Launchpad::Device.new
+      d = LaunchpadMk2::Device.new
       assert !d.closed?
       d.close
       assert d.closed?
@@ -186,7 +186,7 @@ describe Launchpad::Device do
 
   describe 'top level API initialized with output' do
     before do
-      @device = Launchpad::Device.new(:input => false)
+      @device = LaunchpadMk2::Device.new(:input => false)
     end
 
     describe '#pulse1' do
@@ -263,15 +263,15 @@ describe Launchpad::Device do
   describe '#change' do
     
     it 'raises NoOutputAllowedError when not initialized with output' do
-      assert_raises Launchpad::NoOutputAllowedError do
-        Launchpad::Device.new(:output => false).change(:up)
+      assert_raises LaunchpadMk2::NoOutputAllowedError do
+        LaunchpadMk2::Device.new(:output => false).change(:up)
       end
     end
     
     describe 'initialized with output' do
       
       before do
-        @device = Launchpad::Device.new(:input => false)
+        @device = LaunchpadMk2::Device.new(:input => false)
       end
       
       it 'returns nil' do
@@ -307,37 +307,37 @@ describe Launchpad::Device do
         end
         
         it 'raises NoValidGridCoordinatesError if x is not specified' do
-          assert_raises Launchpad::NoValidGridCoordinatesError do
+          assert_raises LaunchpadMk2::NoValidGridCoordinatesError do
             @device.change(:grid, :y => 1)
           end
         end
         
         it 'raises NoValidGridCoordinatesError if x is below 0' do
-          assert_raises Launchpad::NoValidGridCoordinatesError do
+          assert_raises LaunchpadMk2::NoValidGridCoordinatesError do
             @device.change(:grid, :x => -1, :y => 1)
           end
         end
         
         it 'raises NoValidGridCoordinatesError if x is above 7' do
-          assert_raises Launchpad::NoValidGridCoordinatesError do
+          assert_raises LaunchpadMk2::NoValidGridCoordinatesError do
             @device.change(:grid, :x => 8, :y => 1)
           end
         end
         
         it 'raises NoValidGridCoordinatesError if y is not specified' do
-          assert_raises Launchpad::NoValidGridCoordinatesError do
+          assert_raises LaunchpadMk2::NoValidGridCoordinatesError do
             @device.change(:grid, :x => 1)
           end
         end
         
         it 'raises NoValidGridCoordinatesError if y is below 0' do
-          assert_raises Launchpad::NoValidGridCoordinatesError do
+          assert_raises LaunchpadMk2::NoValidGridCoordinatesError do
             @device.change(:grid, :x => 1, :y => -1)
           end
         end
         
         it 'raises NoValidGridCoordinatesError if y is above 7' do
-          assert_raises Launchpad::NoValidGridCoordinatesError do
+          assert_raises LaunchpadMk2::NoValidGridCoordinatesError do
             @device.change(:grid, :x => 1, :y => 8)
           end
         end
@@ -353,19 +353,19 @@ describe Launchpad::Device do
         end
         
         it 'raises NoValidColorError if color is below 0' do
-          assert_raises Launchpad::NoValidColorError do
+          assert_raises LaunchpadMk2::NoValidColorError do
             @device.change(:grid, :x => 0, :y => 0, :color => -1)
           end
         end
         
         it 'raises NoValidColorError if color is above 127' do
-          assert_raises Launchpad::NoValidColorError do
+          assert_raises LaunchpadMk2::NoValidColorError do
             @device.change(:grid, :x => 0, :y => 0, :color => 128)
           end
         end
         
         it 'raises NoValidColorError if color is an unknown symbol' do
-          assert_raises Launchpad::NoValidColorError do
+          assert_raises LaunchpadMk2::NoValidColorError do
             @device.change(:grid, :x => 0, :y => 0, :color => :unknown)
           end
         end
@@ -388,15 +388,15 @@ describe Launchpad::Device do
   describe '#read_pending_actions' do
     
     it 'raises NoInputAllowedError when not initialized with input' do
-      assert_raises Launchpad::NoInputAllowedError do
-        Launchpad::Device.new(:input => false).read_pending_actions
+      assert_raises LaunchpadMk2::NoInputAllowedError do
+        LaunchpadMk2::Device.new(:input => false).read_pending_actions
       end
     end
     
     describe 'initialized with input' do
       
       before do
-        @device = Launchpad::Device.new(:output => false)
+        @device = LaunchpadMk2::Device.new(:output => false)
       end
       
       describe 'control buttons' do

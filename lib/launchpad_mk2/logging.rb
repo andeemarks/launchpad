@@ -1,6 +1,6 @@
 require 'logger'
 
-module Launchpad
+module LaunchpadMk2
 
   # This module provides logging facilities. Just include it to be able to log
   # stuff.

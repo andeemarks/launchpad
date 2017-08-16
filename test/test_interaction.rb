@@ -3,7 +3,7 @@ require 'timeout'
 
 class BreakError < StandardError; end
 
-describe Launchpad::Interaction do
+describe LaunchpadMk2::Interaction do
     
   before do
     @interaction = nil
@@ -45,65 +45,65 @@ describe Launchpad::Interaction do
   describe '#initialize' do
     
     it 'creates device if not given' do
-      device = Launchpad::Device.new
-      Launchpad::Device.expects(:new).
+      device = LaunchpadMk2::Device.new
+      LaunchpadMk2::Device.expects(:new).
         with(:input => true, :output => true, :logger => nil).
         returns(device)
-      interaction = Launchpad::Interaction.new
+      interaction = LaunchpadMk2::Interaction.new
       assert_same device, interaction.device
     end
     
     it 'creates device with given device_name' do
-      device = Launchpad::Device.new
-      Launchpad::Device.expects(:new).
+      device = LaunchpadMk2::Device.new
+      LaunchpadMk2::Device.expects(:new).
         with(:device_name => 'device', :input => true, :output => true, :logger => nil).
         returns(device)
-      interaction = Launchpad::Interaction.new(:device_name => 'device')
+      interaction = LaunchpadMk2::Interaction.new(:device_name => 'device')
       assert_same device, interaction.device
     end
     
     it 'creates device with given input_device_id' do
-      device = Launchpad::Device.new
-      Launchpad::Device.expects(:new).
+      device = LaunchpadMk2::Device.new
+      LaunchpadMk2::Device.expects(:new).
         with(:input_device_id => 'in', :input => true, :output => true, :logger => nil).
         returns(device)
-      interaction = Launchpad::Interaction.new(:input_device_id => 'in')
+      interaction = LaunchpadMk2::Interaction.new(:input_device_id => 'in')
       assert_same device, interaction.device
     end
     
     it 'creates device with given output_device_id' do
-      device = Launchpad::Device.new
-      Launchpad::Device.expects(:new).
+      device = LaunchpadMk2::Device.new
+      LaunchpadMk2::Device.expects(:new).
         with(:output_device_id => 'out', :input => true, :output => true, :logger => nil).
         returns(device)
-      interaction = Launchpad::Interaction.new(:output_device_id => 'out')
+      interaction = LaunchpadMk2::Interaction.new(:output_device_id => 'out')
       assert_same device, interaction.device
     end
     
     it 'creates device with given input_device_id/output_device_id' do
-      device = Launchpad::Device.new
-      Launchpad::Device.expects(:new).
+      device = LaunchpadMk2::Device.new
+      LaunchpadMk2::Device.expects(:new).
         with(:input_device_id => 'in', :output_device_id => 'out', :input => true, :output => true, :logger => nil).
         returns(device)
-      interaction = Launchpad::Interaction.new(:input_device_id => 'in', :output_device_id => 'out')
+      interaction = LaunchpadMk2::Interaction.new(:input_device_id => 'in', :output_device_id => 'out')
       assert_same device, interaction.device
     end
     
     it 'initializes device if given' do
-      device = Launchpad::Device.new
-      interaction = Launchpad::Interaction.new(:device => device)
+      device = LaunchpadMk2::Device.new
+      interaction = LaunchpadMk2::Interaction.new(:device => device)
       assert_same device, interaction.device
     end
 
     it 'stores the logger given' do
       logger = Logger.new(nil)
-      interaction = Launchpad::Interaction.new(:logger => logger)
+      interaction = LaunchpadMk2::Interaction.new(:logger => logger)
       assert_same logger, interaction.logger
       assert_same logger, interaction.device.logger
     end
     
     it 'doesn\'t activate the interaction' do
-      assert !Launchpad::Interaction.new.active
+      assert !LaunchpadMk2::Interaction.new.active
     end
     
   end
@@ -112,7 +112,7 @@ describe Launchpad::Interaction do
 
     it 'stores the logger and passes it to the device as well' do
       logger = Logger.new(nil)
-      interaction = Launchpad::Interaction.new
+      interaction = LaunchpadMk2::Interaction.new
       interaction.logger = logger
       assert_same logger, interaction.logger
       assert_same logger, interaction.device.logger
@@ -123,13 +123,13 @@ describe Launchpad::Interaction do
   describe '#close' do
 
     it 'stops the interaction' do
-      interaction = Launchpad::Interaction.new
+      interaction = LaunchpadMk2::Interaction.new
       interaction.expects(:stop)
       interaction.close
     end
     
     it 'closes the device' do
-      interaction = Launchpad::Interaction.new
+      interaction = LaunchpadMk2::Interaction.new
       interaction.device.expects(:close)
       interaction.close
     end
@@ -139,7 +139,7 @@ describe Launchpad::Interaction do
   describe '#closed?' do
     
     it 'returns false on a newly created interaction, but true after closing' do
-      interaction = Launchpad::Interaction.new
+      interaction = LaunchpadMk2::Interaction.new
       assert !interaction.closed?
       interaction.close
       assert interaction.closed?
@@ -150,7 +150,7 @@ describe Launchpad::Interaction do
   describe '#start' do
     
     before do
-      @interaction = Launchpad::Interaction.new
+      @interaction = LaunchpadMk2::Interaction.new
     end
     
     after do
@@ -187,7 +187,7 @@ describe Launchpad::Interaction do
     
     it 'raises CommunicationError when Portmidi::DeviceError occurs' do
       @interaction.device.stubs(:read_pending_actions).raises(Portmidi::DeviceError.new(0))
-      assert_raises Launchpad::CommunicationError do
+      assert_raises LaunchpadMk2::CommunicationError do
         @interaction.start
       end
     end
@@ -252,7 +252,7 @@ describe Launchpad::Interaction do
       end
       
       it 'sleeps with given latency' do
-        @interaction = Launchpad::Interaction.new(:latency => 0.5, :device => @device)
+        @interaction = LaunchpadMk2::Interaction.new(:latency => 0.5, :device => @device)
         timeout(0.55) { @interaction.start }
         assert @times.size > 1
         @times.each_cons(2) do |a,b|
@@ -261,7 +261,7 @@ describe Launchpad::Interaction do
       end
       
       it 'sleeps with absolute value of given negative latency' do
-        @interaction = Launchpad::Interaction.new(:latency => -0.1, :device => @device)
+        @interaction = LaunchpadMk2::Interaction.new(:latency => -0.1, :device => @device)
         timeout(0.15) { @interaction.start }
         assert @times.size > 1
         @times.each_cons(2) do |a,b|
@@ -270,7 +270,7 @@ describe Launchpad::Interaction do
       end
       
       it 'does not sleep when latency is 0' do
-        @interaction = Launchpad::Interaction.new(:latency => 0, :device => @device)
+        @interaction = LaunchpadMk2::Interaction.new(:latency => 0, :device => @device)
         timeout(0.001) { @interaction.start }
         assert @times.size > 1
         @times.each_cons(2) do |a,b|
@@ -282,7 +282,7 @@ describe Launchpad::Interaction do
     
     it 'raises NoInputAllowedError on closed interaction' do
       @interaction.close
-      assert_raises Launchpad::NoInputAllowedError do
+      assert_raises LaunchpadMk2::NoInputAllowedError do
         @interaction.start
       end
     end
@@ -292,7 +292,7 @@ describe Launchpad::Interaction do
   describe '#stop' do
 
     before do
-      @interaction = Launchpad::Interaction.new
+      @interaction = LaunchpadMk2::Interaction.new
     end
     
     it 'sets active to false in blocking mode' do
@@ -332,7 +332,7 @@ describe Launchpad::Interaction do
   describe '#response_to/#no_response_to/#respond_to' do
     
     before do
-      @interaction = Launchpad::Interaction.new
+      @interaction = LaunchpadMk2::Interaction.new
     end
     
     it 'calls all responses that match, and not others' do
@@ -442,7 +442,7 @@ describe Launchpad::Interaction do
       log = StringIO.new
       logger = Logger.new(log)
       logger.level = Logger::ERROR
-      i = Launchpad::Interaction.new(:logger => logger)
+      i = LaunchpadMk2::Interaction.new(:logger => logger)
       i.response_to(:mixer, :down) {|current_interaction,a| current_interaction.stop}
       i.device.expects(:read_pending_actions).
         at_least_once.

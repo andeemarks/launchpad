@@ -1,7 +1,7 @@
-require 'launchpad/device'
-require 'launchpad/logging'
+require 'launchpad_mk2/device'
+require 'launchpad_mk2/logging'
 
-module Launchpad
+module LaunchpadMk2
   
   # This class provides advanced interaction features.
   # 
@@ -9,7 +9,7 @@ module Launchpad
   # 
   #   require 'launchpad_mk2'
   #   
-  #   interaction = Launchpad::Interaction.new
+  #   interaction = LaunchpadMk2::Interaction.new
   #   interaction.response_to(:grid, :down) do |interaction, action|
   #     interaction.device.change(:grid, action.merge(:red => :high))
   #   end
@@ -22,17 +22,17 @@ module Launchpad
 
     include Logging
     
-    # Returns the Launchpad::Device the Launchpad::Interaction acts on.
+    # Returns the LaunchpadMk2::Device the LaunchpadMk2::Interaction acts on.
     attr_reader :device
     
-    # Returns whether the Launchpad::Interaction is active or not.
+    # Returns whether the LaunchpadMk2::Interaction is active or not.
     attr_reader :active
     
     # Initializes the interaction.
     # 
     # Optional options hash:
     # 
-    # [<tt>:device</tt>]            Launchpad::Device to act on,
+    # [<tt>:device</tt>]            LaunchpadMk2::Device to act on,
     #                               optional, <tt>:input_device_id/:output_device_id</tt> will be used if omitted
     # [<tt>:input_device_id</tt>]   ID of the MIDI input device to use,
     #                               optional, <tt>:device_name</tt> will be used if omitted
@@ -46,15 +46,15 @@ module Launchpad
     # 
     # Errors raised:
     # 
-    # [Launchpad::NoSuchDeviceError] when device with ID or name specified does not exist
-    # [Launchpad::DeviceBusyError] when device with ID or name specified is busy
+    # [LaunchpadMk2::NoSuchDeviceError] when device with ID or name specified does not exist
+    # [LaunchpadMk2::DeviceBusyError] when device with ID or name specified is busy
     def initialize(opts = nil)
       @reader_thread = nil
       @device = nil
       opts ||= {}
 
       self.logger = opts[:logger]
-      logger.debug "initializing Launchpad::Interaction##{object_id} with #{opts.inspect}"
+      logger.debug "initializing LaunchpadMk2::Interaction##{object_id} with #{opts.inspect}"
 
       @device ||= opts[:device]
       @device ||= Device.new(opts.merge(
@@ -80,10 +80,10 @@ module Launchpad
     # 
     # Errors raised:
     # 
-    # [Launchpad::NoInputAllowedError] when input is not enabled on the interaction's device
-    # [Launchpad::CommunicationError] when anything unexpected happens while communicating with the    
+    # [LaunchpadMk2::NoInputAllowedError] when input is not enabled on the interaction's device
+    # [LaunchpadMk2::CommunicationError] when anything unexpected happens while communicating with the    
     def close
-      logger.debug "closing Launchpad::Interaction##{object_id}"
+      logger.debug "closing LaunchpadMk2::Interaction##{object_id}"
       stop
       @device.close
     end
@@ -104,11 +104,11 @@ module Launchpad
     # 
     # Errors raised:
     # 
-    # [Launchpad::NoInputAllowedError] when input is not enabled on the interaction's device
-    # [Launchpad::NoOutputAllowedError] when output is not enabled on the interaction's device
-    # [Launchpad::CommunicationError] when anything unexpected happens while communicating with the launchpad
+    # [LaunchpadMk2::NoInputAllowedError] when input is not enabled on the interaction's device
+    # [LaunchpadMk2::NoOutputAllowedError] when output is not enabled on the interaction's device
+    # [LaunchpadMk2::CommunicationError] when anything unexpected happens while communicating with the launchpad
     def start(opts = nil)
-      logger.debug "starting Launchpad::Interaction##{object_id}"
+      logger.debug "starting LaunchpadMk2::Interaction##{object_id}"
 
       opts = {
         :detached => false
@@ -142,10 +142,10 @@ module Launchpad
     # 
     # Errors raised:
     # 
-    # [Launchpad::NoInputAllowedError] when input is not enabled on the interaction's device
-    # [Launchpad::CommunicationError] when anything unexpected happens while communicating with the    
+    # [LaunchpadMk2::NoInputAllowedError] when input is not enabled on the interaction's device
+    # [LaunchpadMk2::CommunicationError] when anything unexpected happens while communicating with the    
     def stop
-      logger.debug "stopping Launchpad::Interaction##{object_id}"
+      logger.debug "stopping LaunchpadMk2::Interaction##{object_id}"
       @active = false
       if @reader_thread
         # run (resume from sleep) and wait for @reader_thread to end
@@ -189,7 +189,7 @@ module Launchpad
     # Block parameters:
     # 
     # [+interaction+] the interaction object that received the action
-    # [+action+]      the action received from Launchpad::Device.read_pending_actions
+    # [+action+]      the action received from LaunchpadMk2::Device.read_pending_actions
     def response_to(types = :all, state = :both, opts = nil, &block)
       logger.debug "setting response to #{types.inspect} for state #{state.inspect} with #{opts.inspect}"
       types = Array(types)
@@ -309,7 +309,7 @@ module Launchpad
     # 
     # Parameters:
     # 
-    # [+action+]  hash containing an action from Launchpad::Device.read_pending_actions
+    # [+action+]  hash containing an action from LaunchpadMk2::Device.read_pending_actions
     def respond_to_action(action)
       type = action[:type].to_sym
       state = action[:state].to_sym

@@ -4,7 +4,7 @@ require "launchpad_mk2/version"
 
 Gem::Specification.new do |s|
   s.name        = "launchpad_mk2"
-  s.version     = Launchpad::VERSION
+  s.version     = LaunchpadMk2::VERSION
   s.authors     = ["Andy Marks"]
   s.email       = ["vampwillow@gmail.com"]
   s.homepage    = "https://github.com/andeemarks/launchpad"

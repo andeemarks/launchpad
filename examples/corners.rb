@@ -1,6 +1,6 @@
 require 'launchpad_mk2'
 
-device = Launchpad::Device.new(:input => false, :output => true)
+device = LaunchpadMk2::Device.new(:input => false, :output => true)
 
 device.change :grid, :x => 0, :y => 0, :color => 56 # fuschia
 device.change :grid, :x => 7, :y => 7, :color => 63 # olive
