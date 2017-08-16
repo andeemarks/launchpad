@@ -10,7 +10,7 @@ end
 
 require 'mocha/setup'
 
-require 'launchpad'
+require 'launchpad_mk2'
 
 # mock Portmidi for tests
 module Portmidi
