@@ -189,6 +189,15 @@ describe LaunchpadMk2::Device do
       @device = LaunchpadMk2::Device.new(:input => false)
     end
 
+    describe '#rgb1' do
+      [[1, 4, 0, 0, 63], [0, 6, 63, 0, 0]].each do |message|
+        it "sends 11, #{(message[1] + 1) * 10 + (message[0] + 1)}, #{message[2]}, #{message[3]}, #{message[4]} when given #{message}" do
+          expects_sysex_message(@device, [11, (message[1] + 1) * 10 + (message[0] + 1), message[2], message[3], message[4]])
+          @device.rgb1(message[0], message[1], message[2], message[3], message[4])
+        end
+      end
+    end
+
     describe '#pulse1' do
       [[1, 4, 24], [0, 6, 27]].each do |message|
         it "sends 40, 0, #{(message[1] + 1) * 10 + (message[0] + 1)}, #{message[2]} when given #{message}" do

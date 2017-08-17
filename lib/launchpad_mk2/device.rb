@@ -160,6 +160,11 @@ module LaunchpadMk2
     SYSEX_HEADER = [240, 0, 32, 41, 2, 24]
     SYSEX_FOOTER = [247]
 
+    def rgb1(x, y, r, g, b)
+      note = note(:grid, {:x => x, :y => y})
+      output_sysex(SYSEX_HEADER + [11, note, r, g, b] + SYSEX_FOOTER)
+    end
+
     def pulse1(x, y, color_key)
       note = note(:grid, {:x => x, :y => y})
       output_sysex(SYSEX_HEADER + [40, 0, note, color_key] + SYSEX_FOOTER)
