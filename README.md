@@ -61,6 +61,23 @@ This is an interaction example lighting all grid buttons in red when pressed and
 
 For more details, see the examples. examples/color_picker.rb is the most complex example of interaction.
 
+## Examples
+
+All examples can be found in the `examples` folder and run as standalone Ruby applications (i.e., `ruby examples/<file>.rb`).
+
+| Name              | Purpose                                                           |
+| ---               | ---                                                               |
+| binary_clock.rb   | Dynamic HH:MM:SS binary clock                                     |
+| brightness.rb     | Uses #rgb1 and #rgbn methods to demonstrate brightness variations |
+| color_picker.rb   | WIP                                                               |
+| colors.rb         | Shows entire 128 colour palette                                   |
+| corners.rb        | Basic demonstration of coordinate mapping                         |
+| doodle.rb         | WIP                                                               |
+| drawing_board.rb  | WIP                                                               |
+| feedback.rb       | Lights up buttons on press                                        |
+| pong.rb           | WIP                                                               |
+| sysex.rb          | Tests most of the sysex based messages (e.g., #pulse1, #flashn, #light_all, #scroll_once etc) |
+
 ## To Do
 
 *   Ensure all examples are working with MK2
