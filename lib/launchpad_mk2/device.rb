@@ -165,6 +165,13 @@ module LaunchpadMk2
       output_sysex(SYSEX_HEADER + [11, note, r, g, b] + SYSEX_FOOTER)
     end
 
+    def rgbn(notes, r, g, b)
+      notes.each { |coord|
+        note = note(:grid, {:x => coord[0], :y => coord[1]})
+        output_sysex(SYSEX_HEADER + [11, note, r, g, b] + SYSEX_FOOTER)
+      }
+    end
+
     def pulse1(x, y, color_key)
       note = note(:grid, {:x => x, :y => y})
       output_sysex(SYSEX_HEADER + [40, 0, note, color_key] + SYSEX_FOOTER)

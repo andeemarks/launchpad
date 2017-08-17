@@ -198,6 +198,15 @@ describe LaunchpadMk2::Device do
       end
     end
 
+    describe '#rgbn' do
+      it "sends one message for each set of coordinates received" do
+        [[1, 4], [0, 6]].each do |coords|
+          expects_sysex_message(@device, [11, (coords[1] + 1) * 10 + (coords[0] + 1), 31, 15, 63])
+        end
+        @device.rgbn([[1, 4], [0, 6]], 31, 15, 63)
+      end
+    end
+
     describe '#pulse1' do
       [[1, 4, 24], [0, 6, 27]].each do |message|
         it "sends 40, 0, #{(message[1] + 1) * 10 + (message[0] + 1)}, #{message[2]} when given #{message}" do

@@ -33,14 +33,11 @@ end
 
 # third quadrant of colors = white
 brightness = 0
-(4..7).each do |row|
-  (0..3).each do |column|
-		device.rgb1 column, row, brightness, brightness, brightness
-		brightness = brightness + 4
-  end
+coords = (0..3).to_a().product((4..7).to_a())
+until brightness > 63 do
+	device.rgbn(coords, brightness, brightness, brightness)
+	sleep(0.25)
+	brightness = brightness + 4
 end
-
-# sleep so that the messages can be sent before the program terminates
-sleep 2
 
 device.reset_all()
