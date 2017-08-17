@@ -35,16 +35,14 @@ There are two main entry points:
 
 *   `require 'launchpad_mk2/device'`, providing `LaunchpadMk2::Device`, which handles all the basic input/output stuff
 
-*   `require 'launchpad_mk2/interaction'` or just 'launchpad_mk2', additionally providing `LaunchpadMk2::Interaction`, which lets you respond to actions (button presses/releases)
+*   `require 'launchpad_mk2/interaction'` or just `'launchpad_mk2'`, additionally providing `LaunchpadMk2::Interaction`, which lets you respond to actions (button presses/releases)
 
 This is a simple example (only requiring the device for output) that resets the launchpad and then lights the grid button at position 4/4 (from bottom left of 0/0).
 
     require 'launchpad_mk2/device'
 
     device = LaunchpadMk2::Device.new
-    sleep 1
     device.reset_all
-    sleep 1
     device.change :grid, :x => 4, :y => 4, :color => 72
 
 This is an interaction example lighting all grid buttons in red when pressed and keeping them lit.
@@ -61,11 +59,11 @@ This is an interaction example lighting all grid buttons in red when pressed and
 
     interaction.start
 
-For more details, see the examples. examples/color_picker.rb is the most complex example with interaction.
+For more details, see the examples. examples/color_picker.rb is the most complex example of interaction.
 
 ## To Do
 
-*   Ensure all examples are working
+*   Ensure all examples are working with MK2
 
 ## Copyright
 
